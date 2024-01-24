@@ -175,3 +175,12 @@ Physics
 Comp. Sci.
 Finance
 
+savepoint s24012024_1;
+15. Transfer all the students from CSE department to IT department.
+update Student set dept_name='Comp. Sci.' where dept_name='Elec. Eng.';
+2 rows updated.
+
+16. Increase salaries of instructors whose salary is over $100,000 by 3%, and all 
+others receive a 5% raise
+update Instructor set salary=(case when salary>100000 then salary*1.03 else salary*1.05 end);
+12 rows updated. 
