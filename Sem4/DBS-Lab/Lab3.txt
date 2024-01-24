@@ -164,4 +164,56 @@ Intro. to Computer Science
 ID
 -----
 98988
-15.	
+15. Find all courses that were offered at most once in 2009.
+select distinct c.title 
+from course c 
+where 1>= (select count(g.ID) 
+	from Takes g 
+	where g.course_id=c.course_id and g.year=2009);
+TITLE
+--------------------------------------------------
+Intro. to Biology
+Genetics
+Music Video Production
+Physical Principles
+Investment Banking
+World History
+Image Processing
+Intro. to Digital Systems
+Computational Biology
+Robotics
+
+10 rows selected.
+
+16. Find all the students who have opted at least two courses offered by CSE department.
+select name from Student s
+where 2<=(select count(t.ID) from Takes t, course c
+	where t.course_id=c.course_id and t.ID=s.ID and c.dept_name='Comp. Sci.');
+NAME
+--------------------
+Zhang
+Shankar
+Levy
+Williams
+Brown
+Bourikas
+
+6 rows selected.
+
+17. Find the average instructors salary of those departments where the average salary is 
+greater than 42000
+select dept_name,avgsal
+from (select avg(salary) avgsal, dept_name from Instructor group by dept_name)
+where avgsal>42000;
+DEPT_NAME                AVGSAL
+-------------------- ----------
+Elec. Eng.                80000
+Physics                   91000
+Comp. Sci.           77333.3333
+Finance                   85000
+Biology                   72000
+History                   61000
+
+6 rows selected.
+18. Create a view all_courses consisting of course sections offered by Physics 
+department in the Fall 2009, with the building and room number of each section.
