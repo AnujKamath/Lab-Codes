@@ -1,0 +1,167 @@
+1.	(select course_id
+	from takes 
+	where semester='Fall' and year=2009)
+	union
+	(select course_id
+	from takes 
+	where semester='Spring' and year=2010);
+COURSE_I
+--------
+CS-101
+CS-315
+CS-319
+CS-347
+FIN-201
+HIS-351
+MU-199
+PHY-101
+2.	(select course_id
+	from takes 
+	where semester='Fall' and year=2009)
+	intersect
+	(select course_id
+	from takes 
+	where semester='Spring' and year=2010);
+COURSE_I
+--------
+CS-101
+3.	(select course_id
+	from takes 
+	where semester='Fall' and year=2009)
+	minus
+	(select course_id
+	from takes 
+	where semester='Spring' and year=2010);
+COURSE_I
+--------
+CS-347
+PHY-101
+4.	(select c.title
+	from course c)
+	minus
+	(select c.title
+	from Course c, section s
+	where c.course_id=s.course_id);
+TITLE
+--------------------------------------------------
+Computational Biology
+
+5.	select distinct(c.title)
+	from Course c, takes t
+	where t.semester='Fall' and t.year=2009 and c.course_id in
+	(select course_id
+	from takes
+	where semester='Spring' and year=2010);
+TITLE
+--------------------------------------------------
+Music Video Production
+Investment Banking
+World History
+Image Processing
+Intro. to Computer Science
+Robotics
+
+6 rows selected.
+6.	select count(distinct(t.ID))
+	from takes t
+	where t.course_id in
+	(select te.course_id
+	from Teaches te
+	where te.id=10101);
+COUNT(DISTINCT(T.ID))
+---------------------
+                    6
+
+7.	select distinct(c.title)
+	from Course c, takes t
+	where t.semester='Fall' and t.year=2009 and c.course_id not in
+	(select course_id
+	from takes
+	where semester='Spring' and year=2010);
+TITLE
+--------------------------------------------------
+Intro. to Biology
+Database System Concepts
+Genetics
+Physical Principles
+Game Design
+Intro. to Digital Systems
+Computational Biology
+
+8.	 select name
+	from Student
+	where name in
+	(select name from Instructor);
+NAME
+--------------------
+Brandt
+9.	select name
+	from Instructor 
+	where salary> some
+	(select salary
+	from Instructor
+	where dept_name='Biology');
+NAME
+--------------------
+Srinivasan
+Califieri
+El Said
+Mozart
+10.	select name
+	from Instructor 
+	where salary> all
+	(select salary
+	from Instructor
+	where dept_name='Biology');
+NAME
+--------------------
+Katz
+Singh
+Kim
+Gold
+Wu
+Brandt
+Einstein
+
+7 rows selected.
+11.	select dept_name
+	from Instructor
+	group by dept_name
+having avg(salary) >= all
+	(select avg(salary)
+	from Instructor
+	group by dept_name);
+DEPT_NAME
+--------------------
+Physics
+12.	select dept_name
+from Department
+	where budget<all
+(select avg(salary)
+	from Instructor);
+
+DEPT_NAME
+--------------------
+History
+Physics
+13.	select distinct(c.title)
+	from Course c, Takes s
+	where c.course_id= s.course_id and s.semester='Fall' and s.year=2009 and exists
+	(select c.title
+	from Course c, Takes s
+	where c.course_id= s.course_id and s.semester='Spring' and s.year=2010);
+TITLE
+--------------------------------------------------
+Database System Concepts
+Physical Principles
+Intro. to Computer Science
+14.	select distinct(t.id)
+	from Course c1, Takes t
+	where c1.course_id=t.course_id and exists
+	(select t.ID
+	from Takes t, Course c2
+	where c2.course_id=t.course_id and c1.course_id=c2.course_id and c2.dept_name='Biology');
+ID
+-----
+98988
+15.	

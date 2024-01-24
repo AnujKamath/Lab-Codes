@@ -1,0 +1,295 @@
+14. (atleast one course in the university) select distinct(i.ID) 
+from instructor i, teaches t
+where t.id=i.ID;
+15.   select s.name, c.title, se.year
+	from Student s, Section se, Course c, Takes t
+	where s.ID=t.ID and t.course_id=c.course_id and se.course_id=c.course_id and se.room_number=100 and se.section_id=t.sec_id and t.semester=se.semester and t.year=se.year;
+16.	select s.name, c.title as c_name
+	from Student s, Course c, Takes t
+	where t.year=2010 and t.course_id=c.course_id and t.ID=s.ID;
+17. 	select distinct(i1.name),i2.salary as inst_salary
+	from Instructor i1,Instructor i2 
+	where i2.dept_name='Comp. Sci.' and i1.salary>i2.salary;
+18	select name
+	from Instructor 
+	where dept_name like '%Co%';
+19. select name, length(name)
+	from Student;
+20.	select dept_name, substr(dept_name,2,1)
+from Department;
+21.	select upper(name)
+	from Instructor;
+22.	select nvl(grade,'a') from Takes;
+23.	select salary, round(salary/3,-2) from Instructor;
+24.	 alter table Employee add DOB Date;
+	update Employee set DOB='12-Jun-2019' where DNo=2;
+	update Employee set DOB='2-May-2020' where DNo=1;
+	select to_char(DOB,'DD-MON-YYYY')
+	from Employee;
+select to_char(DOB,'DD-MON-YY')
+	from Employee;
+	select to_char(DOB,'DD-MM-YY')
+	from Employee;
+25.	select empname, to_char(DOB,'YEAR')
+	from Employee;
+	select empname, to_char(DOB,'Year')
+	from Employee;
+	select empname, to_char(DOB,'year')
+	from Employee;
+
+
+SQL> select to_char(DOB,'DD-MON-YYYY')
+  2  from Employee;
+
+TO_CHAR(DOB
+-----------
+12-JUN-2019
+02-MAY-2020
+
+SQL> select to_char(DOB,'DD-MON-YY')
+  2  from Employee;
+
+TO_CHAR(D
+---------
+12-JUN-19
+02-MAY-20
+
+SQL> select to_char(DOB,'DD-MM-YY')
+  2  from Employee;
+
+TO_CHAR(
+--------
+12-06-19
+02-05-20
+
+SQL> select empnam, to_char(DOB,'YEAR')
+  2  from Employee;
+select empnam, to_char(DOB,'YEAR')
+       *
+ERROR at line 1:
+ORA-00904: "EMPNAM": invalid identifier
+
+
+SQL> select empname, to_char(DOB,'YEAR')
+  2  from Employee;
+
+EMPNAM TO_CHAR(DOB,'YEAR')
+------ ------------------------------------------
+AB     TWENTY NINETEEN
+CD     TWENTY TWENTY
+
+SQL> select empname, to_char(DOB,'Year')
+  2  from Employee;
+
+EMPNAM TO_CHAR(DOB,'YEAR')
+------ ------------------------------------------
+AB     Twenty Nineteen
+CD     Twenty Twenty
+
+SQL> select empname, to_char(DOB,'year')
+  2  from Employee;
+
+EMPNAM TO_CHAR(DOB,'YEAR')
+------ ------------------------------------------
+AB     twenty nineteen
+CD     twenty twenty
+
+ select salary, round(salary/3,-2) from Instructor;
+
+    SALARY ROUND(SALARY/3,-2)
+---------- ------------------
+     65000              21700
+     90000              30000
+     40000              13300
+     95000              31700
+     60000              20000
+     87000              29000
+     75000              25000
+     62000              20700
+     80000              26700
+     72000              24000
+     92000              30700
+
+    SALARY ROUND(SALARY/3,-2)
+---------- ------------------
+     80000              26700
+
+select nvl(grade,'a') from Takes;
+
+NV
+--
+A
+A-
+C
+A
+A
+A
+B
+C+
+B-
+F
+B+
+
+NV
+--
+B
+A-
+B+
+A-
+A
+A
+C
+C-
+B
+A
+a
+
+22 rows selected.
+select upper(name)
+  2  from Instructor;
+
+UPPER(NAME)
+--------------------
+SRINIVASAN
+WU
+MOZART
+EINSTEIN
+EL SAID
+GOLD
+KATZ
+CALIFIERI
+SINGH
+CRICK
+BRANDT
+
+UPPER(NAME)
+--------------------
+KIM
+
+12 rows selected.
+select dept_name, substr(dept_name,2,1)
+  2  from Department;
+
+DEPT_NAME            S
+-------------------- -
+Biology              i
+Comp. Sci.           o
+Elec. Eng.           l
+Finance              i
+History              i
+Music                u
+Physics              h
+
+7 rows selected.
+ select name, length(name)
+  2  from Student;
+
+NAME                 LENGTH(NAME)
+-------------------- ------------
+Zhang                           5
+Shankar                         7
+Brandt                          6
+Chavez                          6
+Peltier                         7
+Levy                            4
+Williams                        8
+Sanchez                         7
+Snow                            4
+Brown                           5
+Aoi                             3
+
+NAME                 LENGTH(NAME)
+-------------------- ------------
+Bourikas                        8
+Tanaka                          6
+
+13 rows selected.
+ select name
+  2  from Instructor
+  3  where dept_name like '%Co%';
+
+NAME
+--------------------
+Srinivasan
+Katz
+Brandt
+
+
+ select distinct(i1.name),i2.salary as inst_salary
+  2  from Instructor i1,Instructor i2
+  3  where i2.dept_name='Comp. Sci.' and i1.salary>i2.salary;
+
+NAME                 INST_SALARY
+-------------------- -----------
+Crick                      65000
+Singh                      65000
+Wu                         65000
+Einstein                   65000
+Gold                       75000
+Brandt                     75000
+Kim                        65000
+Katz                       65000
+Gold                       65000
+Kim                        75000
+Singh                      75000
+
+NAME                 INST_SALARY
+-------------------- -----------
+Wu                         75000
+Einstein                   75000
+Brandt                     65000
+Einstein                   92000
+
+ select i1.name, i2.salary as inst_salary
+  2  from Instructor i1,Instructor i2
+  3  where i2.dept_name='Comp. Sci.' and i1.salary>i2.salary;
+
+NAME                 INST_SALARY
+-------------------- -----------
+Crick                      65000
+Katz                       65000
+Singh                      65000
+Kim                        65000
+Gold                       65000
+Wu                         65000
+Brandt                     65000
+Einstein                   65000
+Singh                      75000
+Kim                        75000
+Gold                       75000
+
+NAME                 INST_SALARY
+-------------------- -----------
+Wu                         75000
+Brandt                     75000
+Einstein                   75000
+Einstein                   92000
+ select s.name, c.title as c_name
+  2  from Student s, Course c, Takes t
+  3  where t.year=2010 and t.course_id=c.course_id and t.ID=s.ID;
+
+NAME                 C_NAME
+-------------------- --------------------------------------------------
+Shankar              Robotics
+Brandt               World History
+Chavez               Investment Banking
+Levy                 Image Processing
+Levy                 Intro. to Computer Science
+Sanchez              Music Video Production
+Brown                Image Processing
+Bourikas             Robotics
+Tanaka               Genetics
+ select s.name, c.title, se.year
+  2  from Student s, Section se, Course c, Takes t
+  3  where s.ID=t.ID and t.course_id=c.course_id and se.course_id=c.course_id and se.room_number=100 and se.sec_id=t.sec_id and t.semester=se.semester and t.year=se.year;
+
+NAME                 TITLE
+-------------------- --------------------------------------------------
+      YEAR
+----------
+Peltier              Physical Principles
+      2009
+
+Levy                 Image Processing
+      2010
+
