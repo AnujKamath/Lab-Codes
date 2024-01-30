@@ -13,9 +13,6 @@ Game Design                                                          2
 Image Processing                                                     2
 Intro. to Digital Systems                                            1
 Intro. to Computer Science                                           6
-
-TITLE                                              COUNT(DISTINCTS.ID)
--------------------------------------------------- -------------------
 Robotics                                                             2
 
 12 rows selected.
@@ -94,9 +91,6 @@ ID    NAME                 DEPT_NAME                SALARY
 10101 Srinivasan           Comp. Sci.                65000
 58583 Califieri            History                   62000
 32343 El Said              History                   60000
-
-ID    NAME                 DEPT_NAME                SALARY
------ -------------------- -------------------- ----------
 15151 Mozart               Music                     40000
 
 12 rows selected.
@@ -109,8 +103,7 @@ MAX(SUM_SAL)
 ------------
       232000
 
-9. Find the average instructors’ salaries of those departments where the average 
-salary is greater than 42000
+9. Find the average instructors’ salaries of those departments where the average salary is greater than 42000
 select dept_name,avg_sal
 from (select dept_name,avg(salary) as avg_sal from Instructor group by dept_name)
 where avg_sal>42000;
@@ -135,8 +128,7 @@ COURSE_I SEC_ID       ENROLL
 -------- -------- ----------
 CS-315   1                 2
 
-11. Find the names of all instructors who teach all students that belong to ‘CSE’ 
-department
+11. Find the names of all instructors who teach all students that belong to ‘CSE’ department
 select distinct iname
 from (select i.name as iname from Instructor i, teaches te, Takes t, Student s 
 	where i.ID=te.id and s.ID=t.ID and t.course_id=te.course_id and t.sec_id=te.sec_id and t.semester=te.semester and t.year=te.year and s.dept_name='Comp. Sci.');
