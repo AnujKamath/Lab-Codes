@@ -215,5 +215,24 @@ Biology                   72000
 History                   61000
 
 6 rows selected.
-18. Create a view all_courses consisting of course sections offered by Physics 
+
+18.  Create a view all_courses consisting of course sections offered by Physics 
 department in the Fall 2009, with the building and room number of each section.
+> create view all_courses as (select s.course_id, sec_id, building, room_number from section s, course c where s.semester='Fall' and s.year=2009 and c.course_id = s.course_id and c.dept_name = 'Physics');
+
+View created.
+
+
+19. Select all the courses from all_courses view.
+> select course_id from all_courses;
+
+COURSE_I
+--------
+PHY-101
+
+20.Create a view department_total_salary consisting of department name and total 
+salary of that department.
+> create view department_total_salary as (select dept_name, sum(salary) TOTSAL from instructor group by dept_name);
+
+View created.
+
