@@ -1,63 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
-struct Node {
+typedef struct Node {
     int data;
     struct Node* next;
-};
-struct Graph {
+}Node;
+typedef struct Graph {
     int V;
     struct Node** array;
-};
-struct Node* newNode(int data) {
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+}Graph;
+ Node* newNode(int data) {
+     Node* node = ( Node*)malloc(sizeof( Node));
     node->data = data;
     node->next = NULL;
     return node;
 }
-struct Graph* createGraph(int V) {
-    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+Graph* createGraph(int V) {
+    Graph* graph = ( Graph*)malloc(sizeof(Graph));
     graph->V = V;
-    graph->array = (struct Node**)malloc(V * sizeof(struct Node*));
+    graph->array = ( Node**)malloc(V * sizeof(Node*));
     for (int i = 0; i < V; ++i)
         graph->array[i] = NULL;
     return graph;
 }
-void addEdge(struct Graph* graph, int src, int dest) {
-    struct Node* node = newNode(dest);
+void addEdge(Graph* graph, int src, int dest) {
+     Node* node = newNode(dest);
     node->next = graph->array[src];
     graph->array[src] = node;
     node = newNode(src);
     node->next = graph->array[dest];
     graph->array[dest] = node;
 }
-struct Stack {
+typedef struct Stack {
     int top;
     unsigned capacity;
     int* array;
-};
-struct Stack* createStack(unsigned capacity) {
-    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+}Stack;
+Stack* createStack(unsigned capacity) {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
     stack->capacity = capacity;
     stack->top = -1;
     stack->array = (int*)malloc(stack->capacity * sizeof(int));
     return stack;
 }
-int isEmpty(struct Stack* stack) {
+int isEmpty(Stack* stack) {
     return stack->top == -1;
 }
-void push(struct Stack* stack, int item) {
+void push(Stack* stack, int item) {
     stack->array[++stack->top] = item;
     printf("Pushed %d\n", item);
 }
-int pop(struct Stack* stack) {
+int pop(Stack* stack) {
     int item = stack->array[stack->top--];
     printf("Popped %d\n", item);
     return item;
 }
-void DFSUtil(struct Graph* graph, int v, int visited[], struct Stack* stack) {
+void DFSUtil(Graph* graph, int v, int visited[], Stack* stack) {
     visited[v] = 1;
     push(stack, v);
-    struct Node* node = graph->array[v];
+    Node* node = graph->array[v];
     while (node != NULL) {
         if (!visited[node->data])
             DFSUtil(graph, node->data, visited, stack);
@@ -65,8 +65,8 @@ void DFSUtil(struct Graph* graph, int v, int visited[], struct Stack* stack) {
     }
     pop(stack);
 }
-void DFS(struct Graph* graph) {
-    struct Stack* stack = createStack(graph->V);
+void DFS(Graph* graph) {
+    Stack* stack = createStack(graph->V);
     int* visited = (int*)malloc(graph->V * sizeof(int));
     for (int i = 0; i < graph->V; i++)
         visited[i] = 0;
@@ -79,7 +79,7 @@ void DFS(struct Graph* graph) {
 }
 int main() {
     int V = 7;
-    struct Graph* graph = createGraph(V);
+    Graph* graph = createGraph(V);
     addEdge(graph, 0, 1);
     addEdge(graph, 0, 2);
     addEdge(graph, 1, 3);
