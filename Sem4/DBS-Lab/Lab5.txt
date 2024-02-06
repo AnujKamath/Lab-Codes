@@ -158,7 +158,13 @@ having 2<count(essn);
          2 ProductY                  3
 13. For each department that has more than five employees, retrieve the department 
 number and the number of its employees who are making more than 40,000.
-select e.dno, count(s.ssn)
-from employee e join employee s on e.ssn=s.ssn
-group by e.dno
-having(count(e.ssn)>=3);
+         //select e.dno, count(s.ssn)
+         //from employee e join employee s on e.ssn=s.ssn
+         //group by e.dno
+         //having(count(e.ssn)>=3);
+select d.dnumber, (select count(e.ssn) from department d join employee e on d.dnumber = e.dno where e.salary > 40000 group by d.dnumber) IDK from department d join employee e on d.dnumber = e.dno group by d.dnumber having (count(e.ssn) > 3);
+
+   DNUMBER        IDK
+---------- ----------
+         4          2
+         5          2
