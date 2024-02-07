@@ -1,0 +1,42 @@
+create table Department(DNo numeric(5), DName varchar(20), MgrEno numeric(5), primary key(DNo));
+
+create table Employee(ENo numeric(5), Name varchar(20), DNo numeric(5), Salary numeric(6), Commission numeric(6),
+SuperEno numeric(5), primary key(ENo), foreign key(DNo) references Department(DNo));
+
+insert into Department values(10,'Finance', 3333);
+insert into Department values(20,'Accounts', 2222);
+insert into Department values(30,'Manufacturing', 4444);
+
+insert into Employee values(1111, 'Satish', 10, 10000, 1000, 3333);
+insert into Employee values(2222, 'Rashmi', 20, 8000, 500, 5555);
+insert into Employee values(3333, 'Rishit', 10, 7000, 400,NULL );
+insert into Employee values(4444, 'Anil', 30, 12000, 2000, NULL);
+insert into Employee values(5555, 'Sunil', 20, 13000, 1200, NULL);
+
+- select e.ENo ,e.Name, (e.Salary+e.Commission) Total_Salary
+  from Employee e;
+	       ENO NAME                 TOTAL_SALARY
+	---------- -------------------- ------------
+ 	     1111 Satish                      11000
+   	     2222 Rashmi                       8500
+ 	     3333 Rishit                       7400
+	     4444 Anil                        14000
+	     5555 Sunil                       14200
+
+- select d.DName, (select count(e.ENo) from Employee e where e.DNo=d.DNo group by e.DNo) No_Emp
+  from Department d
+  order by d.DName;
+	DNAME                    NO_EMP
+	-------------------- ----------
+	Accounts                      2
+	Finance                       2
+	Manufacturing                 1
+
+- select f.Name, e.Name Super_Name
+  from Employee e, Employee f
+  where e.ENo=f.SuperEno;
+
+	NAME                 SUPER_NAME
+	-------------------- --------------------
+	Satish               Rishit
+	Rashmi               Sunil
