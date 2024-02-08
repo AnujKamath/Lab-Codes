@@ -29,10 +29,10 @@ class Graph:
         for d,value in self.indegree.items():
             if value==0:
                 queue.append(d)
-        self.dfs(vis,queue,path)
+        self.bfs(vis,queue,path)
         return path
 
-    def dfs(self,vis,queue,path):
+    def bfs(self,vis,queue,path):
         if len(queue)>0:
             t=queue.pop(0)
             path.append(t)
@@ -43,7 +43,7 @@ class Graph:
                     if self.indegree[d]==0:
                         queue.append(d)
                         self.indegree[d]=-1
-            self.dfs(vis,queue,path)
+            self.bfs(vis,queue,path)
 
 
     def printAdjList(self):
