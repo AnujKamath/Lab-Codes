@@ -2,22 +2,11 @@ class Graph:
     def __init__(self, vertices):
         self.V = vertices
         self.graph={}
-
-    def addEdgeDirected(self, v, w):
-        print(f"Adding an directed edge between {v} and {w}")
-        if w not in self.graph.keys():
-            self.graph[w]=[]
-        if v in self.graph.keys():
-            self.graph[v].append(w)
-        else:
-            self.graph[v]=[w]
-            self.V+=1
-
     def bfshelp(self):
         vis={}
         t=list(self.graph.keys())
         for c in t:
-            vis[c]=False;
+            vis[c]=False
         queue=[]
         pusher=[t[0]]
         queue.append(t[0])
@@ -32,7 +21,8 @@ class Graph:
         for d in self.graph[x]:
             if not vis[d]:
                 queue.append(d)
-                pusher.append(d)
+                if d not in pusher:
+                    pusher.append(d)
         self.bfs(queue,pusher,vis)
         
 
@@ -46,14 +36,13 @@ class Graph:
 class q2:
     def main():
         g=Graph(0)
-        g.graph={ 'A': {'B','C','D'},
-                  'B': {'A','C','D'},
-                  'C': {'A', 'B', 'D'},
-                  'D': {'A', 'B', 'C'}}
+        g.graph={ 'A': ['B','C','D'],
+                  'B': ['A','C','D'],
+                  'C': ['A', 'B', 'D'],
+                  'D': ['A', 'B', 'C']}
         g.printAdjList()
-        g.bfshelp()
         pusher=g.bfshelp()
-        print("Pushed Order :",end="")
+        print("Traversal Order :",end="")
         for t in pusher:
             print(t,end=" ")
         print()
