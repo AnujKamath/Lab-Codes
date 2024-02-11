@@ -67,7 +67,7 @@ void remove_ties(Graph* g,int v)
 }
 void toposort(Graph* g)
 {
-    printf("Topological Sorting Using DFS: ");
+    printf("Topological Sorting Using Source Removal Method: ");
     int* vis=(int*)calloc(g->V,sizeof(int));
     while(1)
     {
