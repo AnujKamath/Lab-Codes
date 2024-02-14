@@ -1,0 +1,210 @@
+create table StudentTable(RollNo numeric(2), GPA numeric(2,1));
+insert into StudentTable values(1, 5.8);
+insert into StudentTable values(2,6.5);
+insert into StudentTable values(3, 3.4);
+insert into StudentTable values(4, 7.8);
+insert into StudentTable values(5, 9.5);
+
+question  1 Write a PL/SQL block to display the GPA of given student.
+set serveroutput on
+declare
+stu_roll numeric(3);
+stu_gpa numeric(2,1);
+begin
+	stu_roll:='&RollNo';	
+	select gpa into stu_gpa
+	from StudentTable 
+	where RollNo=stu_roll;
+	dbms_output.put_line('GPA= '||stu_gpa);
+end;
+/
+Enter value for rollno: 2
+old   5: stu_roll:='&RollNo';
+new   5: stu_roll:='2';
+GPA= 6.5
+
+2. Write a PL/SQL block to display the letter grade(0-4: F; 4-5: E; 5-6: D; 6-7: C; 
+7-8: B; 8-9: A; 9-10: A+} of given student
+set serveroutput on
+declare
+stu_roll numeric(3);
+stu_gpa numeric(2,1);
+grade varchar(2);
+begin
+	stu_roll:='&RollNo';
+	
+	select gpa into stu_gpa
+	from StudentTable 
+	where RollNo=stu_roll;
+	if stu_gpa between 0 and 4 then grade:='F';
+	elsif stu_gpa between 4 and 5 then grade:='E';
+	elsif stu_gpa between 5 and 6 then grade:='D';
+	elsif stu_gpa between 6 and 7 then grade:='C';
+	elsif stu_gpa between 7 and 8 then grade:='B';
+	elsif stu_gpa between 8 and 9 then grade:='A';
+	else grade:='+A';
+	end if;
+
+	dbms_output.put_line('Grade= '||grade);
+end;
+/
+Enter value for rollno: 2
+old   6: stu_roll:='&RollNo';
+new   6: stu_roll:='2';
+Grade= C
+
+
+3. Input the date of issue and date of return for a book. Calculate and display the fine 
+with the appropriate message using a PL/SQL block. The fine is charged as per 
+the table 8.1: 
+Late period Fine
+7 days NIL
+8 – 15 days Rs.1/day
+16 - 30 days Rs. 2/ day
+After 30 days Rs. 5.00
+Table 8.1
+set serveroutput on
+declare
+fine numeric(2);
+doi date;
+dor date;
+d numeric(3);
+begin
+	doi:='&Dateofissue';
+	dor:='&DateofReturn';
+	d:=dor-doi;
+	dbms_output.put_line('Difference'||d);
+	if d<=7 then fine:=0;
+	elsif d<=15 then fine:=(d-7)*1;
+	elsif d<=30 then fine:=8*1+(d-15)*2;
+	else fine:=8*1+15*2+5;
+	end if;
+	dbms_output.put_line('The Fine is'||fine);
+end;
+/
+Enter value for dateofissue: 12 Jan 2004
+old   7: doi:='&Dateofissue';
+new   7: doi:='12 Jan 2004';
+Enter value for dateofreturn: 30 Jan 2004
+old   8: dor:='&DateofReturn';
+new   8: dor:='30 Jan 2004';
+Difference18
+The Fine is14
+
+4. Write a PL/SQL block to print the letter grade of all the students(RollNo: 1 - 5).
+set serveroutput on
+declare
+stu_roll numeric(3);
+stu_gpa numeric(2,1);
+grade varchar(2);
+begin
+	for i in 1..5 LOOP
+		select gpa into stu_gpa
+		from StudentTable 
+		where RollNo=i;
+		if stu_gpa between 0 and 4 then grade:='F';
+		elsif stu_gpa between 4 and 5 then grade:='E';
+		elsif stu_gpa between 5 and 6 then grade:='D';
+		elsif stu_gpa between 6 and 7 then grade:='C';
+		elsif stu_gpa between 7 and 8 then grade:='B';
+		elsif stu_gpa between 8 and 9 then grade:='A';
+		else grade:='+A';
+		end if;
+		dbms_output.put_line('Grade of roll no.'||i||'is='||grade);
+	end loop;
+end;
+/
+Grade of roll no.1is=D
+Grade of roll no.2is=C
+Grade of roll no.3is=F
+Grade of roll no.4is=B
+Grade of roll no.5is=+A
+
+5. Alter StudentTable by appending an additional column LetterGrade Varchar2(2). 
+Then write a PL/SQL block to update the table with letter grade of each student.
+set serveroutput on
+declare
+stu_roll numeric(3);
+stu_gpa numeric(2,1);
+grade varchar(2);
+i numeric(2);
+begin
+	i:=1;
+	while i<6 LOOP
+		select gpa into stu_gpa
+		from StudentTable 
+		where RollNo=i;
+		if stu_gpa between 0 and 4 then grade:='F';
+		elsif stu_gpa between 4 and 5 then grade:='E';
+		elsif stu_gpa between 5 and 6 then grade:='D';
+		elsif stu_gpa between 6 and 7 then grade:='C';
+		elsif stu_gpa between 7 and 8 then grade:='B';
+		elsif stu_gpa between 8 and 9 then grade:='A';
+		else grade:='+A';
+		end if;
+		update StudentTable set LetterGrade=grade where rollno=i;
+		i:=i+1;
+	end loop;
+end;
+/
+PL/SQL procedure successfully completed.
+
+SQL> select * from StudentTable;
+
+    ROLLNO        GPA LE
+---------- ---------- --
+         1        5.8 D
+         2        6.5 C
+         3        3.4 F
+         4        7.8 B
+         5        9.5 +A
+		 
+
+6. Write a PL/SQL block to find the student with max. GPA without using aggregate 
+function
+set serveroutput on
+declare
+stu_gpa numeric(2,1);
+i numeric(2);
+maxa numeric(2,1);
+begin
+	i:=1;
+	select gpa into maxa
+	from StudentTable
+	where RollNo=1;
+	for i in 1..5 LOOP
+		select gpa into stu_gpa
+		from StudentTable 
+		where RollNo=i;
+		if maxa < stu_gpa then maxa:=stu_gpa;
+		end if;
+	end loop;
+	dbms_output.put_line('Highest Gpa is='||maxa);
+end;
+/
+Highest Gpa is=9.5
+
+
+7. Implement lab exercise 4 using GOTO. 
+set serveroutput on
+declare
+stu_roll numeric(3);
+stu_gpa numeric(2,1);
+grade varchar(2);
+begin
+	for i in 1..5 LOOP
+		select gpa into stu_gpa
+		from StudentTable 
+		where RollNo=i;
+		if stu_gpa between 0 and 4 then grade:='F';
+		elsif stu_gpa between 4 and 5 then grade:='E';
+		elsif stu_gpa between 5 and 6 then grade:='D';
+		elsif stu_gpa between 6 and 7 then grade:='C';
+		elsif stu_gpa between 7 and 8 then grade:='B';
+		elsif stu_gpa between 8 and 9 then grade:='A';
+		else grade:='+A';
+		end if;
+		dbms_output.put_line('Grade of roll no.'||i||'is='||grade);
+	end loop;
+end;
+/
