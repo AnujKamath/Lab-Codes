@@ -32,7 +32,6 @@ void mergesort(int* a,int l,int r)
     int m=l+(r-l)/2;
     mergesort(a,l,m);
     mergesort(a,m+1,r);
-    printf("%d, %d, %d,\n",l,m,r);
     merge(a,l,m,r);
 }
 int main()
