@@ -37,7 +37,7 @@ void mergesort(int* a,int l,int r)
 int main()
 {
     int ar[]={3,2,1,6,7,4,5};
-    int s=7;
+    int s=sizeof(ar)/sizeof(int);
     mergesort(ar,0,s-1);
     printf("After mergesort: ");
     for(int i=0;i<s;i++)
