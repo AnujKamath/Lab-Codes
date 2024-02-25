@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 #define MAX_NODES 100
-
+int z=0;
+int q=0;
 typedef struct Node
 {
     int data;
@@ -165,46 +166,40 @@ void preorder(Node *root)
         preorder(root->r);
     }
 }
-Node* successor(Node* root)
+int successor(Node* root,int val)
 {
-    // if(root->r==NULL)
-    // return NULL;
-    Node* succ=root->r;
-    while(succ->l)
+    if(root)
     {
-        succ=succ->l;
+        successor(root->l,val);
+        if(z==1)
+        {
+            z=0;
+            return root->data;}
+        if(root->data==val)
+        z=1;
+        successor(root->r,val);
     }
-    return succ;
 }
-Node* predecessor(Node* root)
+int predecessor(Node* root,int val)
 {
-    // if(root->l==NULL)
-    // return NULL;
-    Node* pred=root->l;
-    while(pred->r)
+    if(root)
     {
-        pred=pred->r;
+        predecessor(root->r,val);
+        if(q==1)
+        {q=0;
+        return root->data;}
+        if(root->data==val)
+        q=1;
+        predecessor(root->l,val);
     }
-    return pred;
 }
-Node* search(Node* root,int key)
-{
-    // if(!root)
-    // return NULL;
-    printf("%d\n",root->data);
-    if(root->data==key)
-    return root;
-    if(key<root->data)
-    return search(root->l,key);
-    else return search(root->r,key);
-}
+
 
 int main()
 {
     // 25 26 28 23 22 24 27
     // 5 6 8 3 2 4 7
     Node *root = NULL;
-
     int n,k;
     printf("Enter number of elements: ");
     scanf("%d", &n);
@@ -216,17 +211,17 @@ int main()
         scanf("%d", &temp);
         root = insertNode(root, temp);
     }
-
+    Node* tempe=root;
     printf("\nPreorder: ");
-    preorder(root);
+    preorder(tempe);
     printf("\n");
     printf("Enter a key");
     scanf("%d",&k);
-    Node* t=search(root,k);
-    printf("%d",t->data);
-    Node *tem=successor(t);
-    // printf("Successor of %d is:%d\n",k,tem->data);
-    tem=predecessor(t);
-    printf("Predecessor of %d is:%d\n",k,tem->data);
+    tempe=root;
+    int tem=successor(tempe,k);
+    printf("Successor of %d is:%d\n",k,tem);
+    tempe=root;
+    tem=predecessor(tempe,k);
+    printf("Predecessor of %d is:%d\n",k,tem);
     return 0;
 } 
