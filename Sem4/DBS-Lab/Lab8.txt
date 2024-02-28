@@ -1,0 +1,92 @@
+1. The HRD manager has decided to raise the salary of all the Instructors in a given
+department number by 5%. Whenever, any such raise is given to the instructor, a
+record for the same is maintained in the salary_raise table. It includes the Instuctor
+Id, the date when the raise was given and the actual raise amount. Write a PL/SQL
+block to update the salary of each Instructor and insert a record in the salary_raise
+table.
+salary_raise(Instructor_Id, Raise_date, Raise_amt)
+create table salary_raise(Instructor_Id varchar(5), Raise_date date , Raise_amt numeric(8,2));
+set serveroutput on
+declare
+	dept_inp instructor.dept_name%TYPE;
+	r instructor%ROWTYPE;
+	dt date;
+	cursor c1(dname instructor.dept_name%TYPE) is select * from Instructor where dept_name=dname for update;
+begin
+	dept_inp:='&DepartmentName';
+	open c1(dept_inp);
+	LOOP
+		FETCH c1 into r;
+		exit when c1%NOTFOUND;
+		dt:='23 Jan 2024';
+		insert into salary_raise values(r.ID,dt,r.salary*0.05);
+		update Instructor set salary= salary *1.05 where current of c1;
+	end loop;
+	close c1;
+end;
+/
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from salary_raise;
+
+INSTR RAISE_DAT  RAISE_AMT
+----- --------- ----------
+22222 23-JAN-24    5236.88
+33456 23-JAN-24    4795.88
+
+
+
+2. Write a PL/SQL block that will display the ID, name, dept_name and tot_cred of
+the first 10 students with lowest total credit.
+
+set serveroutput on;
+declare 
+cursor c1 is select * from Student order by tot_cred;
+r student%ROWTYPE;
+begin
+	OPEN c1;
+	LOOP
+		Fetch c1 into r;
+		dbms_output.put_line('ID= '||r.id||',Name= '||r.name||',Department= '||r.dept_name||',Total credits= '||r.tot_cred);
+		exit when c1%ROWCOUNT=10;
+	end LOOP;
+	close c1;
+end;
+/
+ID= 70557,Name= Snow,Department= Physics,Total credits= 0
+ID= 12345,Name= Shankar,Department= Comp. Sci.,Total credits= 32
+ID= 55739,Name= Sanchez,Department= Music,Total credits= 38
+ID= 45678,Name= Levy,Department= Physics,Total credits= 46
+ID= 54321,Name= Williams,Department= Comp. Sci.,Total credits= 54
+ID= 44553,Name= Peltier,Department= Physics,Total credits= 56
+ID= 76543,Name= Brown,Department= Comp. Sci.,Total credits= 58
+ID= 76653,Name= Aoi,Department= Elec. Eng.,Total credits= 60
+ID= 19991,Name= Brandt,Department= History,Total credits= 80
+ID= 98765,Name= Bourikas,Department= Elec. Eng.,Total credits= 98
+
+
+
+3. Print the Course details and the total number of students registered for each course
+along with the course details - (Course-id, title, dept-name, credits,
+instructor_name, building, room-number, time-slot-id, tot_student_no )
+set serveroutput on
+declare
+	cursor c1 is select count(course_id) as ccount, course_id from Takes group by course_id;
+	sec section%ROWTYPE;
+	cor course%ROWTYPE;
+	inst instructor.name%TYPE;
+	cursor c2(r course.course_id%TYPE) is select * from section where section.course_id=r.course_id;
+
+begin
+	for r in c1 LOOP
+		open c2(r.course_id);
+		Fetch c2 into sec;
+		select * into cor from course where course.course_id=r.course_id;
+		select i.name into inst from Instructor i,teaches t where i.id=t.id and t.course_id=r.course_id and t.sec_id=sec.sec_id;
+		dbms_output.put_line('Course id= '||r.course_id||',title= '||cor.title
+		||'Dept_Name= '||',Credits= '||cor.credits||',instructor_name= '||inst||'Building= '||sec.building||',Room_No.='||sec.room_number||
+		',time_slot_id= '||sec.time_slot_id||',total student no= '||r.ccount);
+	end LOOP;
+	end;
+	/
