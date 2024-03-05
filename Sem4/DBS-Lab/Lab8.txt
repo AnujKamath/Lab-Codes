@@ -91,7 +91,39 @@ begin
 	end;
 	/
 
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+
+set serveroutput on;
+declare
+	cursor c1 is select * from course;
+	cursor c2(cname Section.course_id%TYPE) is select * from section where course_id=cname;
+	cursor course_stu(cname Takes.course_id%TYPE,sname Takes.sec_id%TYPE) is select count(distinct(t.id)) as coun from Takes t where t.course_id=cname and t.sec_id=sname group by t.course_id,t.sec_id;
+begin
+	for a in c1 LOOP
+		for b in c2(a.course_id) LOOP
+			for c in course_stu(b.course_id, b.sec_id) LOOP
+				dbms_output.put_line(a.course_id || ' ' ||a.title||' '||a.dept_name||' '||a.credits||' '||b.building||' '||b.room_number||' '||b.time_slot_id||' Total S				tudents= '||c.coun);
+			end LOOP;
+		end LOOP;
+	end LOOP;
+end;
+/
+BIO-101 Intro. to Biology Biology 4 Painter 514 B Total Students= 1
+BIO-301 Genetics Biology 4 Painter 514 A Total Students= 1
+CS-101 Intro. to Computer Science Comp. Sci. 4 Packard 101 H Total Students= 6
+CS-101 Intro. to Computer Science Comp. Sci. 4 Packard 101 F Total Students= 6
+CS-190 Game Design Comp. Sci. 4 Taylor 3128 A Total Students= 2
+CS-315 Robotics Comp. Sci. 3 Watson 120 D Total Students= 2
+CS-319 Image Processing Comp. Sci. 3 Watson 100 B Total Students= 1
+CS-319 Image Processing Comp. Sci. 3 Taylor 3128 C Total Students= 1
+CS-347 Database System Concepts Comp. Sci. 3 Taylor 3128 A Total Students= 2
+EE-181 Intro. to Digital Systems Elec. Eng. 3 Taylor 3128 C Total Students= 1
+FIN-201 Investment Banking Finance 3 Packard 101 B Total Students= 1
+HIS-351 World History History 3 Painter 514 C Total Students= 1
+MU-199 Music Video Production Music 3 Packard 101 D Total Students= 1
+PHY-101 Physical Principles Physics 4 Watson 100 A Total Students= 1
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 4. Find all students who take the course with Course-id: CS101 and if he/ she has
 less than 30 total credit (tot-cred), deregister the student from that course. (Delete
 the entry in Takes table)
