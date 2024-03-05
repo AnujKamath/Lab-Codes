@@ -103,7 +103,7 @@ begin
 	for a in c1 LOOP
 		for b in c2(a.course_id) LOOP
 			for c in course_stu(b.course_id, b.sec_id) LOOP
-				dbms_output.put_line(a.course_id || ' ' ||a.title||' '||a.dept_name||' '||a.credits||' '||b.building||' '||b.room_number||' '||b.time_slot_id||' Total S				tudents= '||c.coun);
+				dbms_output.put_line(a.course_id || ' ' ||a.title||' '||a.dept_name||' '||a.credits||' '||b.building||' '||b.room_number||' '||b.time_slot_id||' Total Students= '||c.coun);
 			end LOOP;
 		end LOOP;
 	end LOOP;
