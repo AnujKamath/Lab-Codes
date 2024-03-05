@@ -90,3 +90,115 @@ begin
 	end LOOP;
 	end;
 	/
+
+
+4. Find all students who take the course with Course-id: CS101 and if he/ she has
+less than 30 total credit (tot-cred), deregister the student from that course. (Delete
+the entry in Takes table)
+ 
+set serveroutput on;
+declare
+	cursor c1(cname Takes.course_id%TYPE) is select * from Takes where course_id=cname 	for update;
+	stu_cred Student.tot_cred%TYPE;
+
+begin
+	for d in c1('CS-101') LOOP
+		select tot_cred into stu_cred from Student where d.id=Student.id;
+		if stu_cred<30 then
+			delete from Takes where current of c1;		
+		end if;
+	end LOOP;
+end;
+/
+PL/SQL procedure successfully completed.
+
+5. Alter StudentTable(refer Lab No. 8 Exercise) by resetting column LetterGrade to
+F. Then write a PL/SQL block to update the table by mapping GPA to the
+corresponding letter grade for each student.
+set serveroutput on
+declare
+cursor c1 is select * from StudentTable for update;
+grade varchar(2);
+begin
+	for d in c1 LOOP
+		if d.gpa between 0 and 4 then grade:='F';
+		elsif d.gpa between 4 and 5 then grade:='E';
+		elsif d.gpa between 5 and 6 then grade:='D';
+		elsif d.gpa between 6 and 7 then grade:='C';
+		elsif d.gpa between 7 and 8 then grade:='B';
+		elsif d.gpa between 8 and 9 then grade:='A';
+		else grade:='+A';
+		end if;
+		update StudentTable set LetterGrade=grade where current of c1;
+	end loop;
+end;
+/
+
+    ROLLNO        GPA LE
+---------- ---------- --
+         1        5.8 D
+         2        6.5 C
+         3        3.4 F
+         4        7.8 B
+         5        9.5 +A
+
+6. Write a PL/SQL block to print the list of Instructors teaching a specified course. 
+set serveroutput on;
+declare
+	inp_course Teaches.course_id%TYPE;
+	cursor c1(cname Teaches.course_id%TYPE) is select i.name as names from Instructor i, Teaches t where i.id=t.id and t.course_id=cname;
+begin
+	inp_course:='&Course_id';
+	for d in c1(inp_course) LOOP
+		dbms_output.put_line(d.names);
+	end LOOP;
+end;
+/
+Enter value for course_id: CS-101
+old   5: inp_course:='&Course_id';
+new   5: inp_course:='CS-101';
+Srinivasan
+Katz
+
+PL/SQL procedure successfully completed.
+
+7. Write a PL/SQL block to list the students who have registered for a course taught
+by his/her advisor.
+SET serveroutput ON;
+
+DECLARE
+    CURSOR courses_inst (inst_id Teaches.id%TYPE) IS
+        SELECT course_id FROM Teaches WHERE id = inst_id;
+    CURSOR adv IS
+        SELECT DISTINCT i_id FROM advisor;
+    CURSOR studs (inst_id advisor.i_id%TYPE) IS
+        SELECT a.s_id AS id, s.name AS name
+        FROM Advisor a
+        JOIN Student s ON a.s_id = s.id
+        WHERE a.i_id = inst_id;
+    CURSOR courses_stu (s_id Takes.id%TYPE) IS
+        SELECT course_id FROM Takes WHERE id = s_id;
+BEGIN
+    FOR a IN adv LOOP
+        FOR b IN studs(a.i_id) LOOP
+            FOR c IN courses_inst(a.i_id) LOOP
+                FOR d IN courses_stu(b.id) LOOP
+                    IF c.course_id = d.course_id THEN
+                        dbms_output.put_line('Inst id= ' || a.i_id || ', Student = ' || b.name||', Course= '||c.course_id);
+                    END IF;
+                END LOOP; 
+            END LOOP; 
+        END LOOP; 
+    END LOOP; 
+END;
+/
+Inst id= 45565, Student = Zhang, Course= CS-101
+Inst id= 45565, Student = Brown, Course= CS-101
+Inst id= 45565, Student = Brown, Course= CS-319
+Inst id= 10101, Student = Shankar, Course= CS-101
+Inst id= 10101, Student = Shankar, Course= CS-315
+Inst id= 10101, Student = Shankar, Course= CS-347
+Inst id= 22222, Student = Peltier, Course= PHY-101
+Inst id= 98345, Student = Aoi, Course= EE-181
+Inst id= 76766, Student = Tanaka, Course= BIO-101
+Inst id= 76766, Student = Tanaka, Course= BIO-301
