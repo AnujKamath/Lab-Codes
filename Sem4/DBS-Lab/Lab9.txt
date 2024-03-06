@@ -1,0 +1,24 @@
+1. Write a procedure to display a message “Good Day to You”.
+set serveroutput on
+create or replace 
+disp_msg(msg varchar(20)) is
+begin
+dbms_output.put_line(msg);
+end;
+/
+begin 
+	disp_msg('&Enter a message');
+end;
+/
+
+2. Based on the University Database Schema in Lab 2, write a procedure which takes 
+the dept_name as input parameter and lists all the instructors associated with the 
+department as well as list all the courses offered by the department. Also, write an 
+anonymous block with the procedure call
+set serveroutput on
+create or replace
+dept_info(dept_name Department.dept_name%TYPE) is
+	cursor inst(dname Department.dept_name%TYPE) is select name from Instructor where dept_name=dname;
+	cursor cour(dname Deparmtent.dept_name%TYPE) is select title from course where dept_name=dname;
+begin
+	
