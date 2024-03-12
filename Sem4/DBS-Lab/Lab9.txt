@@ -14,6 +14,8 @@ begin
 end;
 /
 
+_______________________________________________________________________________________________________________________________________
+
 2. Based on the University Database Schema in Lab 2, write a procedure which takes 
 the dept_name as input parameter and lists all the instructors associated with the 
 department as well as list all the courses offered by the department. Also, write an 
@@ -54,6 +56,8 @@ Robotics
 Image Processing
 Database System Concepts	
 
+_______________________________________________________________________________________________________________________________________
+
 3. Based on the University Database Schema in Lab 2, write a Pl/Sql block of code
 that lists the most popular course (highest number of students take it) for each of
 the departments. It should make use of a procedure course_popular which finds
@@ -92,6 +96,8 @@ In Finance department, the most popular course is Investment Banking
 In History department, the most popular course is World History
 In Music department, the most popular course is Music Video Production
 In Physics department, the most popular course is Physical Principles
+
+_______________________________________________________________________________________________________________________________________
 
 4. Based on the University Database Schema in Lab 2, write a procedure which takes
 the dept-name as input parameter and lists all the students associated with the
@@ -132,6 +138,8 @@ Robotics
 Image Processing
 Database System Concepts
 
+_______________________________________________________________________________________________________________________________________
+
 5. Write a function to return the Square of a given number and call it from an
 anonymous block.
 create or replace function square(n numeric) return numeric as
@@ -150,6 +158,8 @@ end;
 /
 Enter value for enterannumber: 5
 Square of 5 is = 25
+
+_______________________________________________________________________________________________________________________________________
 
 6. Based on the University Database Schema in Lab 2, write a Pl/Sql block of code
 that lists the highest paid Instructor in each of the Department. It should make use
@@ -186,6 +196,7 @@ The highest paid instructor in History department is= Califieri
 The highest paid instructor in Music department is= Mozart
 The highest paid instructor in Physics department is= Einstein
 
+_______________________________________________________________________________________________________________________________________
 7. Based on the University Database Schema in Lab 2, create a package to include
 the following:
  a) A named procedure to list the instructor_names of given department
@@ -237,5 +248,43 @@ Srinivasan
 Katz
 Brandt
 The maximum salary in Comp. Sci. department is: 92000
+_______________________________________________________________________________________________________________________
+8. Write a PL/SQL procedure to return simple and compound interest (OUT
+parameters) along with the Total Sum (IN OUT) i.e. Sum of Principle and Interest
+taking as input the principle, rate of interest and number of years (IN parameters).
+Call this procedure from an anonymous block.
 
+CREATE OR REPLACE PROCEDURE calculate_interest(
+    principal IN NUMBER,
+    rate IN NUMBER,
+    years IN NUMBER,
+    si OUT NUMBER,
+    ci OUT NUMBER,
+    total_sum IN OUT NUMBER
+)
+IS
+BEGIN
+    si := (principal * rate * years) / 100;
+    ci := principal * POWER((1 + rate / 100), years) - principal;
+    total_sum := principal + si;
+END calculate_interest;
+/
+
+DECLARE
+    principal NUMBER := 1000;
+    rate NUMBER := 5;
+    years NUMBER := 2;
+    si NUMBER;
+    ci NUMBER;
+    total_sum NUMBER := 0;
+BEGIN
+    calculate_interest(principal, rate, years, si, ci, total_sum);
+    DBMS_OUTPUT.PUT_LINE('Simple Interest: ' || si);
+    DBMS_OUTPUT.PUT_LINE('Compound Interest: ' || ci);
+    DBMS_OUTPUT.PUT_LINE('Total Sum: ' || total_sum);
+END;
+/
+Simple Interest: 100
+Compound Interest: 102.5
+Total Sum: 1100
 
