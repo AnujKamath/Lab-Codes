@@ -1,236 +1,241 @@
-1. The HRD manager has decided to raise the salary of all the Instructors in a given
-department number by 5%. Whenever, any such raise is given to the instructor, a
-record for the same is maintained in the salary_raise table. It includes the Instuctor
-Id, the date when the raise was given and the actual raise amount. Write a PL/SQL
-block to update the salary of each Instructor and insert a record in the salary_raise
-table.
-salary_raise(Instructor_Id, Raise_date, Raise_amt)
-create table salary_raise(Instructor_Id varchar(5), Raise_date date , Raise_amt numeric(8,2));
+1. Write a procedure to display a message “Good Day to You”.
 set serveroutput on
-declare
-	dept_inp instructor.dept_name%TYPE;
-	r instructor%ROWTYPE;
-	dt date;
-	cursor c1(dname instructor.dept_name%TYPE) is select * from Instructor where dept_name=dname for update;
+create or replace procedure disp_msg(msg varchar2) 
+is
 begin
-	dept_inp:='&DepartmentName';
-	open c1(dept_inp);
-	LOOP
-		FETCH c1 into r;
-		exit when c1%NOTFOUND;
-		dt:='23 Jan 2024';
-		insert into salary_raise values(r.ID,dt,r.salary*0.05);
-		update Instructor set salary= salary *1.05 where current of c1;
-	end loop;
-	close c1;
+dbms_output.put_line(msg);
 end;
 /
-
-PL/SQL procedure successfully completed.
-
-SQL> select * from salary_raise;
-
-INSTR RAISE_DAT  RAISE_AMT
------ --------- ----------
-22222 23-JAN-24    5236.88
-33456 23-JAN-24    4795.88
-
-
-
-2. Write a PL/SQL block that will display the ID, name, dept_name and tot_cred of
-the first 10 students with lowest total credit.
-
-set serveroutput on;
 declare 
-cursor c1 is select * from Student order by tot_cred;
-r student%ROWTYPE;
-begin
-	OPEN c1;
-	LOOP
-		Fetch c1 into r;
-		dbms_output.put_line('ID= '||r.id||',Name= '||r.name||',Department= '||r.dept_name||',Total credits= '||r.tot_cred);
-		exit when c1%ROWCOUNT=10;
-	end LOOP;
-	close c1;
+	msg varchar(20);
+begin 
+	msg:='&Enteramessage';
+	disp_msg(msg);
 end;
 /
-ID= 70557,Name= Snow,Department= Physics,Total credits= 0
-ID= 12345,Name= Shankar,Department= Comp. Sci.,Total credits= 32
-ID= 55739,Name= Sanchez,Department= Music,Total credits= 38
-ID= 45678,Name= Levy,Department= Physics,Total credits= 46
-ID= 54321,Name= Williams,Department= Comp. Sci.,Total credits= 54
-ID= 44553,Name= Peltier,Department= Physics,Total credits= 56
-ID= 76543,Name= Brown,Department= Comp. Sci.,Total credits= 58
-ID= 76653,Name= Aoi,Department= Elec. Eng.,Total credits= 60
-ID= 19991,Name= Brandt,Department= History,Total credits= 80
-ID= 98765,Name= Bourikas,Department= Elec. Eng.,Total credits= 98
 
-
-
-3. Print the Course details and the total number of students registered for each course
-along with the course details - (Course-id, title, dept-name, credits,
-instructor_name, building, room-number, time-slot-id, tot_student_no )
+2. Based on the University Database Schema in Lab 2, write a procedure which takes 
+the dept_name as input parameter and lists all the instructors associated with the 
+department as well as list all the courses offered by the department. Also, write an 
+anonymous block with the procedure call
 set serveroutput on
-declare
-	cursor c1 is select count(course_id) as ccount, course_id from Takes group by course_id;
-	sec section%ROWTYPE;
-	cor course%ROWTYPE;
-	inst instructor.name%TYPE;
-	cursor c2(r course.course_id%TYPE) is select * from section where section.course_id=r.course_id;
-
+create or replace procedure dept_info(dept_name Department.dept_name%TYPE) 
+is
+	cursor inst(dname Department.dept_name%TYPE) is select name from Instructor where 		dept_name=dname;
+	cursor cour(dname Department.dept_name%TYPE) is select title from course where 			dept_name=dname;
 begin
-	for r in c1 LOOP
-		open c2(r.course_id);
-		Fetch c2 into sec;
-		select * into cor from course where course.course_id=r.course_id;
-		select i.name into inst from Instructor i,teaches t where i.id=t.id and t.course_id=r.course_id and t.sec_id=sec.sec_id;
-		dbms_output.put_line('Course id= '||r.course_id||',title= '||cor.title
-		||'Dept_Name= '||',Credits= '||cor.credits||',instructor_name= '||inst||'Building= '||sec.building||',Room_No.='||sec.room_number||
-		',time_slot_id= '||sec.time_slot_id||',total student no= '||r.ccount);
-	end LOOP;
-	end;
-	/
-
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-set serveroutput on;
-declare
-	cursor c1 is select * from course;
-	cursor c2(cname Section.course_id%TYPE) is select * from section where course_id=cname;
-	cursor course_stu(cname Takes.course_id%TYPE,sname Takes.sec_id%TYPE) is select count(distinct(t.id)) as coun from Takes t where t.course_id=cname and t.sec_id=sname group by t.course_id,t.sec_id;
-begin
-	for a in c1 LOOP
-		for b in c2(a.course_id) LOOP
-			for c in course_stu(b.course_id, b.sec_id) LOOP
-				dbms_output.put_line(a.course_id || ' ' ||a.title||' '||a.dept_name||' '||a.credits||' '||b.building||' '||b.room_number||' '||b.time_slot_id||' Total Students= '||c.coun);
-			end LOOP;
+	dbms_output.put_line('The instructors in '||dept_name||' are :=');
+	for d in inst(dept_name) LOOP 
+		dbms_output.put_line(d.name);
 		end LOOP;
-	end LOOP;
-end;
+	dbms_output.put_line('The courses offered in '||dept_name||' are :=');
+	for d in cour(dept_name) LOOP 
+		dbms_output.put_line(d.title);
+		end LOOP;
+	end;
 /
-BIO-101 Intro. to Biology Biology 4 Painter 514 B Total Students= 1
-BIO-301 Genetics Biology 4 Painter 514 A Total Students= 1
-CS-101 Intro. to Computer Science Comp. Sci. 4 Packard 101 H Total Students= 6
-CS-101 Intro. to Computer Science Comp. Sci. 4 Packard 101 F Total Students= 6
-CS-190 Game Design Comp. Sci. 4 Taylor 3128 A Total Students= 2
-CS-315 Robotics Comp. Sci. 3 Watson 120 D Total Students= 2
-CS-319 Image Processing Comp. Sci. 3 Watson 100 B Total Students= 1
-CS-319 Image Processing Comp. Sci. 3 Taylor 3128 C Total Students= 1
-CS-347 Database System Concepts Comp. Sci. 3 Taylor 3128 A Total Students= 2
-EE-181 Intro. to Digital Systems Elec. Eng. 3 Taylor 3128 C Total Students= 1
-FIN-201 Investment Banking Finance 3 Packard 101 B Total Students= 1
-HIS-351 World History History 3 Painter 514 C Total Students= 1
-MU-199 Music Video Production Music 3 Packard 101 D Total Students= 1
-PHY-101 Physical Principles Physics 4 Watson 100 A Total Students= 1
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-4. Find all students who take the course with Course-id: CS101 and if he/ she has
-less than 30 total credit (tot-cred), deregister the student from that course. (Delete
-the entry in Takes table)
- 
-set serveroutput on;
 declare
-	cursor c1(cname Takes.course_id%TYPE) is select * from Takes where course_id=cname 	for update;
-	stu_cred Student.tot_cred%TYPE;
-
+	msg Department.dept_name%TYPE;
 begin
-	for d in c1('CS-101') LOOP
-		select tot_cred into stu_cred from Student where d.id=Student.id;
-		if stu_cred<30 then
-			delete from Takes where current of c1;		
-		end if;
-	end LOOP;
+	msg:='&EnterADepartment';
+	dept_info(msg);
 end;
 /
-PL/SQL procedure successfully completed.
+Enter value for enteradepartment: Comp. Sci.
 
-5. Alter StudentTable(refer Lab No. 8 Exercise) by resetting column LetterGrade to
-F. Then write a PL/SQL block to update the table by mapping GPA to the
-corresponding letter grade for each student.
-set serveroutput on
-declare
-cursor c1 is select * from StudentTable for update;
-grade varchar(2);
-begin
-	for d in c1 LOOP
-		if d.gpa between 0 and 4 then grade:='F';
-		elsif d.gpa between 4 and 5 then grade:='E';
-		elsif d.gpa between 5 and 6 then grade:='D';
-		elsif d.gpa between 6 and 7 then grade:='C';
-		elsif d.gpa between 7 and 8 then grade:='B';
-		elsif d.gpa between 8 and 9 then grade:='A';
-		else grade:='+A';
-		end if;
-		update StudentTable set LetterGrade=grade where current of c1;
-	end loop;
-end;
-/
-
-    ROLLNO        GPA LE
----------- ---------- --
-         1        5.8 D
-         2        6.5 C
-         3        3.4 F
-         4        7.8 B
-         5        9.5 +A
-
-6. Write a PL/SQL block to print the list of Instructors teaching a specified course. 
-set serveroutput on;
-declare
-	inp_course Teaches.course_id%TYPE;
-	cursor c1(cname Teaches.course_id%TYPE) is select i.name as names from Instructor i, Teaches t where i.id=t.id and t.course_id=cname;
-begin
-	inp_course:='&Course_id';
-	for d in c1(inp_course) LOOP
-		dbms_output.put_line(d.names);
-	end LOOP;
-end;
-/
-Enter value for course_id: CS-101
-old   5: inp_course:='&Course_id';
-new   5: inp_course:='CS-101';
+The instructors in Comp. Sci. are :=
 Srinivasan
 Katz
+Brandt
+The courses offered in Comp. Sci. are :=
+Intro. to Computer Science
+Game Design
+Robotics
+Image Processing
+Database System Concepts	
 
-PL/SQL procedure successfully completed.
+3. Based on the University Database Schema in Lab 2, write a Pl/Sql block of code
+that lists the most popular course (highest number of students take it) for each of
+the departments. It should make use of a procedure course_popular which finds
+the most popular course in the given department.
+create or replace procedure course_popular(dept_name Department.dept_name%TYPE)
+is
+	cursor counter(c Course.course_id%TYPE) is select count(distinct t.id) as ans from Takes t 		where t.course_id=c group by course_id;
+	cursor courses(deptname Department.dept_name%TYPE) is select c.course_id, 			c.title from Course c where c.dept_name=deptname;
+	ctitle Course.title%TYPE;
+	maxc numeric(5);
+begin
+	maxc:=0;
+	for d in courses(dept_name) LOOP
+		for x in counter(d.course_id) LOOP
+			if x.ans>maxc then 
+				maxc:=x.ans;
+				ctitle:=d.title;
+			end if;
+		end LOOP;
+	end LOOP;
+	dbms_output.put_line('In '||dept_name||' department, the most popular course is '||ctitle);
+end;
+/
+declare
+	cursor depter is select dept_name from Department;
+begin
+	for d in depter LOOP
+		course_popular(d.dept_name);
+	end LOOP;
+end;
+/
+In Biology department, the most popular course is Intro. to Biology
+In Comp. Sci. department, the most popular course is Intro. to Computer Science
+In Elec. Eng. department, the most popular course is Intro. to Digital Systems
+In Finance department, the most popular course is Investment Banking
+In History department, the most popular course is World History
+In Music department, the most popular course is Music Video Production
+In Physics department, the most popular course is Physical Principles
 
-7. Write a PL/SQL block to list the students who have registered for a course taught
-by his/her advisor.
-SET serveroutput ON;
+4. Based on the University Database Schema in Lab 2, write a procedure which takes
+the dept-name as input parameter and lists all the students associated with the
+department as well as list all the courses offered by the department. Also, write an
+anonymous block with the procedure call.
+create or replace procedure dept_stuff(dept_name department.dept_name%TYPE)
+is
+	cursor stu(dept Student.dept_name%TYPE) is select name from Student where dept_name=dept;
+	cursor courses(dept Course.dept_name%TYPE) is select title from course where dept_name=dept;
+begin
+	dbms_output.put_line('The students associated with '||dept_name||' department are :=');
+	for d in stu(dept_name) LOOP
+		dbms_output.put_line(d.name);
+	end LOOP;
+	dbms_output.put_line('The courses associated with '||dept_name||' department are :=');
+	for d in courses(dept_name) LOOP
+		dbms_output.put_line(d.title);
+	end LOOP;
+end;
+/
+declare 
+	msg Department.dept_name%TYPE;
+begin
+	msg:='&EnterADepartment';
+	dept_stuff(msg);
+end;
+/
+Enter value for enteradepartment: Comp. Sci.
+The students associated with Comp. Sci. department are :=
+Zhang
+Shankar
+Williams
+Brown
+The courses associated with Comp. Sci. department are :=
+Intro. to Computer Science
+Game Design
+Robotics
+Image Processing
+Database System Concepts
 
+5. Write a function to return the Square of a given number and call it from an
+anonymous block.
+create or replace function square(n numeric) return numeric as
+	sq numeric;
+begin
+	sq:=n*n;
+return sq;
+end;
+/
+declare
+	num numeric;
+begin
+	num:='&EnterANnumber';
+	dbms_output.put_line('Square of '||num||' is = '||square(num));
+end;
+/
+Enter value for enterannumber: 5
+Square of 5 is = 25
+
+6. Based on the University Database Schema in Lab 2, write a Pl/Sql block of code
+that lists the highest paid Instructor in each of the Department. It should make use
+of a function department_highest which returns the highest paid Instructor for the
+given branch.
+create or replace function department_highest(dept Instructor.dept_name%TYPE) return Instructor.name%TYPE as
+	cursor money(dept Instructor.dept_name%TYPE) is select name,salary from Instructor where dept_name=dept;
+	maxsal numeric;
+	maxname Instructor.name%TYPE;
+begin
+	maxsal:=0;
+	for d in money(dept) LOOP
+		if d.salary>maxsal then
+			maxsal:=d.salary;
+			maxname:=d.name;
+		end if;
+	end lOOP;
+return maxname;
+end;
+/
+declare 
+	cursor depter is select dept_name from Department;
+begin
+	for d in depter LOOP
+		dbms_output.put_line('The highest paid instructor in '||d.dept_name||' department is= '||department_highest(d.dept_name));
+	end LOOP;
+end;
+/
+The highest paid instructor in Biology department is= Crick
+The highest paid instructor in Comp. Sci. department is= Brandt
+The highest paid instructor in Elec. Eng. department is= Kim
+The highest paid instructor in Finance department is= Wu
+The highest paid instructor in History department is= Califieri
+The highest paid instructor in Music department is= Mozart
+The highest paid instructor in Physics department is= Einstein
+
+7. Based on the University Database Schema in Lab 2, create a package to include
+the following:
+ a) A named procedure to list the instructor_names of given department
+ b) A function which returns the max salary for the given department
+ c) Write a PL/SQL block to demonstrate the usage of above package components
+
+create or replace package pack as
+procedure inst_names(dept Instructor.dept_name%TYPE);
+function deptmax(dept Instructor.dept_name%TYPE) return Instructor.salary%TYPE;
+end pack;
+/
+
+create or replace package body pack as
+procedure inst_names(dept Instructor.dept_name%TYPE) is
+	cursor inst(dname Department.dept_name%TYPE) is select name from Instructor where 		dept_name=dname;
+begin
+	dbms_output.put_line('The instructors in '||dept||' department are= ');
+	for d in inst(dept) LOOP
+		dbms_output.put_line(d.name);
+	end LOOP;
+end inst_names;
+function deptmax(dept Instructor.dept_name%TYPE) return Instructor.salary%TYPE as
+cursor money(dept Instructor.dept_name%TYPE) is select salary from Instructor where dept_name=dept;
+	maxsal numeric;
+begin
+	maxsal:=0;
+	for d in money(dept) LOOP
+		if d.salary>maxsal then
+			maxsal:=d.salary;
+		end if;
+	end lOOP;
+return maxsal;
+end deptmax;
+end pack;
+/
 DECLARE
-    CURSOR courses_inst (inst_id Teaches.id%TYPE) IS
-        SELECT course_id FROM Teaches WHERE id = inst_id;
-    CURSOR adv IS
-        SELECT DISTINCT i_id FROM advisor;
-    CURSOR studs (inst_id advisor.i_id%TYPE) IS
-        SELECT a.s_id AS id, s.name AS name
-        FROM Advisor a
-        JOIN Student s ON a.s_id = s.id
-        WHERE a.i_id = inst_id;
-    CURSOR courses_stu (s_id Takes.id%TYPE) IS
-        SELECT course_id FROM Takes WHERE id = s_id;
+    dept_name Instructor.dept_name%TYPE;
+    max_salary Instructor.salary%TYPE;
 BEGIN
-    FOR a IN adv LOOP
-        FOR b IN studs(a.i_id) LOOP
-            FOR c IN courses_inst(a.i_id) LOOP
-                FOR d IN courses_stu(b.id) LOOP
-                    IF c.course_id = d.course_id THEN
-                        dbms_output.put_line('Inst id= ' || a.i_id || ', Student = ' || b.name||', Course= '||c.course_id);
-                    END IF;
-                END LOOP; 
-            END LOOP; 
-        END LOOP; 
-    END LOOP; 
+    dept_name:='&EnterADepartment';
+    pack.inst_names(dept_name);
+    max_salary := pack.deptmax(dept_name);
+    DBMS_OUTPUT.PUT_LINE('The maximum salary in ' || dept_name || ' department is: ' || max_salary);
 END;
 /
-Inst id= 45565, Student = Zhang, Course= CS-101
-Inst id= 45565, Student = Brown, Course= CS-101
-Inst id= 45565, Student = Brown, Course= CS-319
-Inst id= 10101, Student = Shankar, Course= CS-101
-Inst id= 10101, Student = Shankar, Course= CS-315
-Inst id= 10101, Student = Shankar, Course= CS-347
-Inst id= 22222, Student = Peltier, Course= PHY-101
-Inst id= 98345, Student = Aoi, Course= EE-181
-Inst id= 76766, Student = Tanaka, Course= BIO-101
-Inst id= 76766, Student = Tanaka, Course= BIO-301
+Enter value for enteradepartment: Comp. Sci.
+The instructors in Comp. Sci. department are=
+Srinivasan
+Katz
+Brandt
+The maximum salary in Comp. Sci. department is: 92000
+
+
