@@ -1,0 +1,151 @@
+1. Based on the University database Schema in Lab 2, write a row trigger that records 
+along with the time any change made in the Takes (ID, course-id, sec-id, semester, 
+year, grade) table in log_change_Takes (Time_Of_Change, ID, courseid,sec-id, 
+semester, year, grade).
+create table log_change_Takes(Time_Of_Change TIMESTAMP, ID VARCHAR2(5), course_id VARCHAR2(8),
+sec_id VARCHAR2(8), semester VARCHAR2(6), year NUMBER(4), grade VARCHAR2(2));
+
+CREATE OR REPLACE TRIGGER change_Takes
+BEFORE INSERT OR UPDATE OR DELETE ON Takes
+FOR EACH ROW
+DECLARE
+    curdate TIMESTAMP;
+BEGIN
+    SELECT CURRENT_TIMESTAMP INTO curdate FROM dual;
+    
+    CASE
+        WHEN INSERTING THEN
+            INSERT INTO log_change_Takes VALUES (curdate, :NEW.id, :NEW.course_id, :NEW.sec_id, :NEW.semester, :NEW.year, :NEW.grade);
+        WHEN UPDATING THEN
+            INSERT INTO log_change_Takes VALUES (curdate, :NEW.id, :NEW.course_id, :NEW.sec_id, :NEW.semester, :NEW.year, :NEW.grade);
+            INSERT INTO log_change_Takes VALUES (curdate, :OLD.id, :OLD.course_id, :OLD.sec_id, :OLD.semester, :OLD.year, :OLD.grade);
+        WHEN DELETING THEN
+            INSERT INTO log_change_Takes VALUES (curdate, :OLD.id, :OLD.course_id, :OLD.sec_id, :OLD.semester, :OLD.year, :OLD.grade);
+    END CASE;
+END;
+/
+SQL> delete from Takes where id=00128;
+
+2 rows deleted.
+
+SQL> select * from log_change_takes;
+
+TIME_OF_CHANGE
+---------------------------------------------------------------------------
+ID    COURSE_I SEC_ID   SEMEST       YEAR GR
+----- -------- -------- ------ ---------- --
+13-MAR-24 09.56.16.394000 AM
+00128 CS-101   1        Fall         2009 A
+
+13-MAR-24 09.56.16.394000 AM
+00128 CS-347   1        Fall         2009 A-
+
+2. Based on the University database schema in Lab: 2, write a row trigger to insert 
+the existing values of the Instructor (ID, name, dept-name, salary) table into a new 
+table Old_ Data_Instructor (ID, name, dept-name, salary) when the salary table is 
+updated
+create table old_data_instructor(ID VARCHAR2(5),name VARCHAR2(20), dept_name VARCHAR2(20), salary NUMBER(8,2)); 
+create or replace trigger change_inst
+before update on Instructor
+for each row
+begin
+	insert into old_data_instructor values(:old.id,:old.name,:old.dept_name,:old.salary);
+end;
+/
+SQL> update instructor set name='Srinivasana' where id=10101;
+
+1 row updated.
+
+SQL> select * from old_data_instructor;
+
+ID    NAME                 DEPT_NAME                SALARY
+----- -------------------- -------------------- ----------
+10101 Srinivasan           Comp. Sci.                65000
+
+
+3. Based on the University Schema, write a database trigger on Instructor that checks 
+the following:
+ The name of the instructor is a valid name containing only alphabets.
+ The salary of an instructor is not zero and is positive
+ The salary does not exceed the budget of the department to which the 
+instructor belongs.
+
+create or replace trigger check_instructor_details
+before insert or update on instructor
+for each row
+declare
+budg number;
+begin
+if not regexp_like(:NEW.name, '^[A-Za-z ]+$') then
+raise_application_error(-20001, 'Invalid name format. Name should contain only alphabets.');
+end if;
+if :NEW.salary <= 0 then
+    raise_application_error(-20002, 'Salary must be a positive value.');
+end if;
+
+select budget into budg from department where dept_name = :NEW.dept_name;    
+if :NEW.salary > budg then
+    raise_application_error(-20003, 'Salary exceeds department budget.');
+end if;
+end;
+/
+
+
+4. Create a transparent audit system for a table Client_master (client_no, name, 
+address, Bal_due). The system must keep track of the records that are being 
+deleted or updated. The functionality being when a record is deleted or modified 
+the original record details and the date of operation are stored in the auditclient 
+(client_no, name, bal_due, operation, userid, opdate) table, then the delete or 
+update is allowed to go through
+
+create table client_master( client_no numeric(5), name varchar2(10), address varchar2(20), bal_due numeric(8,2));
+create table auditclient( client_no numeric(5), name varchar2(10), address varchar2(20), bal_due numeric(8,2), opdate TIMESTAMP);
+INSERT INTO client_master VALUES (1, 'Alice', '123 Main St', 1000.50);
+INSERT INTO client_master VALUES (2, 'Bob', '456 Elm St', 750.25);
+INSERT INTO client_master VALUES (3, 'Charlie', '789 Oak St', 500.75);
+INSERT INTO client_master VALUES (4, 'David', '101 Pine St', 1200.00);
+INSERT INTO client_master VALUES (5, 'Eve', '202 Cedar St', 900.80);
+
+create or replace trigger change_client
+before update or delete on client_master
+for each row
+declare 
+	curtime TIMESTAMP;
+begin
+	select CURRENT_TIMESTAMP into curtime from dual;
+	insert into auditclient values(:old.client_no, :old.name, :old.address, :old.bal_due, curtime);
+end;
+/
+ CLIENT_NO NAME       ADDRESS                 BAL_DUE             OPDATE
+---------- ---------- -------------------- --------------------------------------------------------------
+         1 Alice      123 Main St              1000.5        13-MAR-24 10.29.06.085000 AM
+
+
+5. Based on the University database Schema in Lab 2, create a view Advisor_Student 
+which is a natural join on Advisor, Student and Instructor tables. Create an 
+INSTEAD OF trigger on Advisor_Student to enable the user to delete the 
+corresponding entries in Advisor table.
+create view advisor_student as select * from advisor a join Student s on a.s_id=s.id;
+
+Create or replace trigger del_advisor
+INSTEAD OF DELETE on advisor_student
+FOR EACH ROW
+BEGIN
+	delete from advisor where i_id=:old.i_id;
+END;
+/
+SQL> delete from advisor_student where dept_name='Elec. Eng.';
+
+2 rows deleted.
+
+SQL> select * from advisor_student;
+
+S_ID  I_ID  ID    NAME                 DEPT_NAME              TOT_CRED
+----- ----- ----- -------------------- -------------------- ----------
+00128 45565 00128 Zhang                Comp. Sci.                  102
+12345 10101 12345 Shankar              Comp. Sci.                   32
+23121 76543 23121 Chavez               Finance                     110
+44553 22222 44553 Peltier              Physics                      56
+45678 22222 45678 Levy                 Physics                      46
+76543 45565 76543 Brown                Comp. Sci.                   58
+98988 76766 98988 Tanaka               Biology                     120
