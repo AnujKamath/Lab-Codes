@@ -1,7 +1,6 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-
+int opcount;
 typedef struct
 {
     int V;
@@ -45,6 +44,9 @@ void warshallAlgo(Graph* g)
         {
             for(int j=0;j<g->V;j++)
             {
+                if(g->adjM[i][a]==0)
+                break;
+                opcount++;
                 if(g->adjM[a][j]==1&&g->adjM[i][a]==1)
                 {
                     g->adjM[i][j]=1;
@@ -56,6 +58,7 @@ void warshallAlgo(Graph* g)
 
 
 int main() {
+    opcount=0;
     int V = 5;
     Graph* graph = createGraph(V);
     addEdge(graph, 0, 1);
@@ -70,5 +73,6 @@ int main() {
     printMatrix(graph);
     warshallAlgo(graph);
     printMatrix(graph);
+    printf("The opcount is:%d\n",opcount);
     return 0;
 }
