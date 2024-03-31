@@ -1,7 +1,7 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #define infinity 99999
+int opcount;
 typedef struct
 {
     int V;
@@ -50,6 +50,8 @@ void FloydAlgo(Graph* g)
         {
             for(int j=0;j<g->V;j++)
             {
+                if(g->adjM[i][a]==infinity) break;
+                opcount++;
                 if(g->adjM[a][j]+g->adjM[i][a]<g->adjM[i][j])
                 {
                     g->adjM[i][j]=g->adjM[a][j]+g->adjM[i][a];
@@ -59,8 +61,8 @@ void FloydAlgo(Graph* g)
     }
 }
 
-
 int main() {
+    opcount=0;
     int V = 4;
     Graph* graph = createGraph(V);
     addEdge(graph, 1,0,2);
@@ -71,5 +73,6 @@ int main() {
     printMatrix(graph);
     FloydAlgo(graph);
     printMatrix(graph);
+    printf("The opcount is:%d\n",opcount);
     return 0;
 }
