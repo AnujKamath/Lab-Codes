@@ -89,6 +89,32 @@ if :NEW.salary > budg then
 end if;
 end;
 /
+SQL> insert into instructor values(11123,'2hello','Comp. Sci.',20000);
+insert into instructor values(11123,'2hello','Comp. Sci.',20000)
+            *
+ERROR at line 1:
+ORA-20001: Invalid name format. Name should contain only alphabets.
+ORA-06512: at "SYSTEM.CHECK_INSTRUCTOR_DETAILS", line 5
+ORA-04088: error during execution of trigger 'SYSTEM.CHECK_INSTRUCTOR_DETAILS'
+
+
+SQL> insert into instructor values(11123,'hello','Comp. Sci.',0);
+insert into instructor values(11123,'hello','Comp. Sci.',0)
+            *
+ERROR at line 1:
+ORA-20002: Salary must be a positive value.
+ORA-06512: at "SYSTEM.CHECK_INSTRUCTOR_DETAILS", line 8
+ORA-04088: error during execution of trigger 'SYSTEM.CHECK_INSTRUCTOR_DETAILS'
+
+
+SQL> insert into instructor values(11123,'hello','Comp. Sci.',200000);
+insert into instructor values(11123,'hello','Comp. Sci.',200000)
+            *
+ERROR at line 1:
+ORA-20003: Salary exceeds department budget.
+ORA-06512: at "SYSTEM.CHECK_INSTRUCTOR_DETAILS", line 13
+ORA-04088: error during execution of trigger 'SYSTEM.CHECK_INSTRUCTOR_DETAILS'
+
 
 
 4. Create a transparent audit system for a table Client_master (client_no, name, 
