@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        td,th{
+            border:2px solid black;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#myCarousel').carousel();
+        });
+    </script>
+</head>
+<body>
+    <h1>Class TimeTable</h1>
+    <div id="myCarousel" class="carousel slide"  data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+      
+        <div class="carousel-inner" style="justify-items: center;">
+          <div class="item active">
+            <div class="day" style="justify-items: center;">
+                <h3>Monday</h3>
+                <table class="table table-bordered table-striped mx-auto" style="width: 80%;">
+                    <tr>
+                        <th></th>
+                        <th>8-9</th>
+                        <th>9-10</th>
+                        <th>10:30-11:30</th>
+                    </tr>
+                    <tr>
+                        <th>Subjects</th>
+                        <td>Web Programming</td>
+                        <td>Deep Learning</td>
+                        <td>EEFM</td>
+                    </tr>
+                    <tr>
+                        <th>Teachers</th>
+                        <td>Ms Ancilla</td>
+                        <td>Ms Ashalatha</td>
+                        <td>Mr Sunith</td>
+                    </tr>
+                </table>
+            </div>
+
+          </div>
+      
+          <div class="item">
+            <div class="day">
+                <h3>Tuesday</h3>
+                <table class="table table-bordered table-striped mx-auto" style="width: 80%;">
+                    <tr>
+                        <th></th>
+                        <th>8-9</th>
+                        <th>9-10</th>
+                        <th>10:30-11:30</th>
+                    </tr>
+                    <tr>
+                        <th>Subjects</th>
+                        <td></td>
+                        <td>Program Elective I</td>
+                        <td>PCAP</td>
+                    </tr>
+                    <tr>
+                        <th>Teachers</th>
+                        <td></td>
+                        <td>Ms Jashma Suresh</td>
+                        <td>Ms Jyothi</td>
+                    </tr>
+                </table>
+            </div>
+          </div>
+      
+          <div class="item">
+            <div class="day">
+                <h3>Wednesday</h3>
+                <table class="table table-bordered table-striped mx-auto" style="width: 80%;">
+                    <tr>
+                        <th></th>
+                        <th>8-9</th>
+                        <th>9-10</th>
+                        <th>10:30-11:30</th>
+                    </tr>
+                    <tr>
+                        <th>Subjects</th>
+                        <td>Program Elective II</td>
+                        <td>Open Electives</td>
+                        <td>PCAP</td>
+                    </tr>
+                    <tr>
+                        <th>Teachers</th>
+                        <td></td>
+                        <td>Mr Ashwath</td>
+                        <td>Mr Someone</td>
+                    </tr>
+                </table>
+            </div>
+          </div>
+        </div>
+      
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+</body>
+</html>

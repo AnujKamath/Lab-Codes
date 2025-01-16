@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        label {
+            min-width: 120px;
+            margin-right: 20px;
+        }
+        .container2 {
+            display: flex;
+            gap: 30px;
+        }
+        td, th {
+            border: 2px solid black;
+            padding: 5px;
+        }
+        .vertical{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="container">
+
+    <h1 class="text-center">Student Bio Data</h1>
+
+    <form>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Personal Information</h3>
+            </div>
+            <div class="panel-body">
+                <div class="container2">
+                    <div class="vertical">
+                        <label for="name">Full Name:</label>
+                        <label for="reg_no">Registration No:</label>
+                        <label for="address">Address:</label>
+                    </div>
+                    <div class="vertical">
+                        <input id="name" class="form-control" type="text">
+                        <input id="reg_no" class="form-control" type="number" pattern="\d{10}">
+                        <textarea id="address" class="form-control" name="Address"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">College Information</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>College Fees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>General</td>
+                            <td>Rs 4,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>NRI</td>
+                            <td>Rs 8,00,000</td>
+                        </tr>
+                        <tr>
+                            <td>Others</td>
+                            <td>Rs 2,00,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Enter your Category</h4>
+                <div class="container2">
+                    <div class="vertical">
+                        <label for="general">General</label>
+                        <label for="NRI">NRI</label>
+                        <label for="Others">Others</label>
+                    </div>
+                    <div class="vertical">
+                        <input id="general" name="category" type="radio"> 
+                        <input id="NRI" name="category" type="radio"> 
+                        <input id="Others" name="category" type="radio">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Interested Domains</h3>
+            </div>
+            <div class="panel-body">
+                <div class="container2">
+                    <div class="vertical">
+                        <label for="Machine Learning">Machine Learning</label>
+                        <label for="Development">Development</label>
+                    </div>
+                    <div class="vertical">
+                        <input id="Machine Learning" type="checkbox"> 
+                        <input id="Development" type="checkbox">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-primary">Reset</button>
+
+    </form>
+
+</body>
+</html>
