@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Time Wisher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .clock {
+            font-size: 3rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .wish {
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .morning { background-color: #e6f2ff; color: #0066cc; }
+        .afternoon { background-color: #fff2e6; color: #ff9900; }
+        .evening { background-color: #e6ffe6; color: #009900; }
+        .night { background-color: #f0e6ff; color: #6600cc; }
+    </style>
+</head>
+<body>
+    <div class="clock" id="clockDisplay"></div>
+    <div id="wishMessage" class="wish"></div>
+
+    <script>
+        function startTime() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+            const formattedTime = [h, m, s]
+                .map(time => time < 10 ? `0${time}` : time)
+                .join(':');
+
+            document.getElementById('clockDisplay').textContent = formattedTime;
+
+            let wishMessage = '';
+            let wishClass = '';
+            
+            if (h >= 4 && h < 12) {
+                wishMessage = 'Good Morning!';
+                wishClass = 'morning';
+            } else if (h >= 12 && h < 16) {
+                wishMessage = 'Good Afternoon! ';
+                wishClass = 'afternoon';
+            } else if (h >= 16 && h < 20) {
+                wishMessage = 'Good Evening!';
+                wishClass = 'evening';
+            } else {
+                wishMessage = 'Good Night!';
+                wishClass = 'night';
+            }
+
+            const wishElement = document.getElementById('wishMessage');
+            wishElement.textContent = wishMessage;
+            wishElement.className = `wish ${wishClass}`;
+
+            setTimeout(startTime, 1000);
+        }
+        window.onload = startTime;
+    </script>
+</body>
+</html>

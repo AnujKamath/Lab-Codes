@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
+            text-align: center;
+        }
+        .question {
+            background-color: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        #resultDiv {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Online Quiz</h1>
+    
+    <form id="quizForm">
+        <div class="question">
+            <p>1. Is water wet?</p>
+            <label>
+                <input type="radio" name="water_question" value="yes"> Yes
+            </label>
+            <label>
+                <input type="radio" name="water_question" value="no"> No
+            </label>
+        </div>
+
+        <div class="question">
+            <p>2. What is 18 + 35?</p>
+            <input type="number" name="math_question" id="math_answer">
+        </div>
+
+        <div class="question">
+            <p>3. The world is flat.</p>
+            <label>
+                <input type="radio" name="world_question" value="true"> True
+            </label>
+            <label>
+                <input type="radio" name="world_question" value="false"> False
+            </label>
+        </div>
+
+        <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+        <button type="reset">Reset</button>
+
+    </form>
+
+    <div id="resultDiv">
+        <h2>Quiz Results</h2>
+        <p id="scoreDisplay"></p>
+        <p id="feedbackDisplay"></p>
+    </div>
+
+    <script>
+        function submitQuiz() {
+            const form = document.getElementById('quizForm');
+            const resultDiv = document.getElementById('resultDiv');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const feedbackDisplay = document.getElementById('feedbackDisplay');
+
+            const correctAnswers = {
+                water_question: 'yes',
+                math_question: 53,
+                world_question: 'false'
+            };
+
+            let score = 0;
+
+            const waterAnswer = form.querySelector('input[name="water_question"]:checked');
+            if (waterAnswer && waterAnswer.value === correctAnswers.water_question) {
+                score++;
+            }
+            const mathAnswer = document.getElementById('math_answer').value;
+            if (parseInt(mathAnswer) === correctAnswers.math_question) {
+                score++;
+            }
+            const worldAnswer = form.querySelector('input[name="world_question"]:checked');
+            if (worldAnswer && worldAnswer.value === correctAnswers.world_question) {
+                score++;
+            }
+            scoreDisplay.textContent = `Your Score: ${score} out of 3`;
+            
+            if (score === 3) {
+                feedbackDisplay.textContent = "Excellent! Perfect Score!";
+                feedbackDisplay.style.color = 'green';
+            } else if (score >= 2) {
+                feedbackDisplay.textContent = "Good job! You're almost there.";
+                feedbackDisplay.style.color = 'blue';
+            } else {
+                feedbackDisplay.textContent = "You need more practice. Try again!";
+                feedbackDisplay.style.color = 'red';
+            }
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

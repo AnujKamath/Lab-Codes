@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
+            text-align: center;
+        }
+        .question {
+            background-color: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        #resultDiv {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Online Quiz</h1>
+    
+    <form id="quizForm">
+      
+        Enter marks for these subjects
+        <div class="question">
+            <p>Mathematics</p>
+            <input type="number" name="math" id="marks1">
+        </div>
+        <div class="question">
+            <p>General Science</p>
+            <input type="number" name="science" id="marks2">
+        </div>
+        <div class="question">
+            <p>Machine Learning</p>
+            <input type="number" name="ml" id="mark3">
+        </div>
+        <div class="question">
+            <p>English</p>
+            <input type="number" name="english" id="mark4">
+        </div>
+        
+        
+        <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+        <button type="reset">Reset</button>
+        
+    </form>
+    <div class="question">
+        <p>Average Score</p>
+        <p id="average"></p>
+    </div>
+
+    <div id="resultDiv">
+        <h2>Quiz Results</h2>
+        <p id="scoreDisplay"></p>
+        <p id="feedbackDisplay"></p>
+    </div>
+
+    <script>
+        function submitQuiz() {
+            const form = document.getElementById('quizForm');
+            const resultDiv = document.getElementById('resultDiv');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const feedbackDisplay = document.getElementById('feedbackDisplay');
+            const averageDisplay = document.getElementById('average');
+    
+            let avg = 0;
+    
+            const mark1 = Number(document.getElementById('marks1').value);
+            const mark2 = Number(document.getElementById('marks2').value);
+            const mark3 = Number(document.getElementById('mark3').value);
+            const mark4 = Number(document.getElementById('mark4').value);
+    
+            avg = (mark1 + mark2 + mark3 + mark4) / 4.0;
+    
+            averageDisplay.textContent = avg.toFixed(2);
+            scoreDisplay.textContent = `Average Score: ${avg.toFixed(2)}`;
+    
+            let score = "";
+            if (avg >= 90) {
+                feedbackDisplay.textContent = "Grade: A (Excellent!)";
+                feedbackDisplay.style.color = 'green';
+            } else if (avg >= 80) {
+                feedbackDisplay.textContent = "Grade: B (Very Good)";
+                feedbackDisplay.style.color = 'blue';
+            } else if (avg >= 70) {
+                feedbackDisplay.textContent = "Grade: C (Good)";
+                feedbackDisplay.style.color = 'blue';
+            } else if (avg >= 60) {
+                feedbackDisplay.textContent = "Grade: D (Average)";
+                feedbackDisplay.style.color = 'orange';
+            } else {
+                feedbackDisplay.textContent = "Grade: F (Need Improvement)";
+                feedbackDisplay.style.color = 'red';
+            }
+            resultDiv.style.display = 'block';
+        }
+    </script>
+    
+</body>
+</html>
