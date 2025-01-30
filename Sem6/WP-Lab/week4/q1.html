@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table, td, tr {
+            border: 2px solid black;
+        }
+
+        #container {
+            display: flex;
+            justify-content: flex-end; 
+            align-items: center;
+            align-content: center;
+            height: 500px;
+            position: relative; 
+        }
+
+        #table, #img {
+            position: relative; 
+            right: 0;
+        }
+
+        /* Alternate row colors */
+        tr:nth-child(even) {
+            background-color: yellow;
+        }
+
+        tr:nth-child(odd) {
+            background-color: red;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("button").click(function(){
+                $("#table, #img").animate({right: '60%'}, 1000); 
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="container">
+        <table id="table">
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+            </tr>
+        </table>
+        <img id="img" src="/home/lab3/Documents/220962446/week4/trump.jpeg" alt="Trump Image">
+    </div>
+    <button>Click Here</button>
+</body>
+</html>

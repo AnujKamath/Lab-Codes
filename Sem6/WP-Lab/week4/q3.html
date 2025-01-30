@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Styling</title>
+    <style>
+        .big-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .container1 {
+            background-color: rgb(235, 235, 126);
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .container2 {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .greetings {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .image {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        label, select, textarea, button {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnSubmit').click(function (event) {
+                event.preventDefault();  
+
+                var bgcolor = $('#colors').val(); 
+                var font = $('#fonts').val(); 
+                var border = $('input[name="border-style"]:checked').val(); 
+                var pictureChecked = $('#addPicture').prop('checked'); 
+
+                $('.container2').css('background-color', bgcolor);
+                $('.greetings').css('font-family', font);
+
+                if (border) {
+                    $('.container2').css('border', `5px ${border} black`);
+                } else {
+                    $('.container2').css('border', 'none');
+                }
+
+                if (pictureChecked) {
+                    $('.image').html('<img src="/home/lab3/Documents/220962446/week4/cake.jpeg" alt="Default Picture">');
+                } else {
+                    $('.image').html('');
+                }
+
+                var greetingText = $('#greets').val();
+                $('.greetings').html('<p>' + greetingText + '</p>');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="big-container">
+        <div class="container1">
+            <form style="display: flex; flex-direction: column;">
+                <label for="colors">Choose a background color</label>
+                <select name="colors" id="colors">
+                    <option value="yellow">Yellow</option>
+                    <option value="green">Green</option>
+                    <option value="blue">Blue</option>
+                </select>
+                <br>
+                <label for="fonts">Choose a font</label>
+                <select name="fonts" id="fonts">
+                    <option value="Verdana">Verdana</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="Roboto">Roboto</option>
+                </select>
+                <br>
+                <label>Choose a border style:</label>
+                <label><input type="radio" name="border-style" id="None" value="None"> None</label>
+                <label><input type="radio" name="border-style" id="Double" value="Double"> Double</label>
+                <label><input type="radio" name="border-style" id="Solid" value="Solid"> Solid</label>
+                <br>
+                <label><input type="checkbox" name="add-picture" id="addPicture"> Add the Default picture</label>
+                <br>
+                <label for="greets">Enter the greeting text below:</label><br>
+                <textarea id="greets"></textarea>
+                <br>
+                <button type="submit" id="btnSubmit">Update</button>
+            </form>
+        </div>
+        <div class="container2">
+            <div class="greetings"></div>
+            <div class="image"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produce Bill</title>
+    <style>
+        .big-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .container1 {
+            background-color: rgb(235, 235, 126);
+            width: 110%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+
+
+        label, select, input, button {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnSubmit').click(function (event) {
+                event.preventDefault();
+
+                var phoneBrand = $('#phones').val(); 
+                var quantity = parseInt($('#quantity').val(), 10);
+                var mobileChecked = $('#mobile').prop('checked');
+                var laptopChecked = $('#laptop').prop('checked');
+                
+                var priceList = {
+                    'HP': 300,
+                    'Nokia': 200,
+                    'Samsung': 400,
+                    'Motorola': 250,
+                    'Apple': 800
+                };
+
+                var laptopPriceList = {
+                    'HP': 1000,
+                    'Nokia': 800,
+                    'Samsung': 1200,
+                    'Motorola': 950,
+                    'Apple': 2000
+                };
+
+                var totalAmount = 0;
+                
+                if (mobileChecked) {
+                    totalAmount += priceList[phoneBrand] * quantity;
+                }
+
+                if (laptopChecked) {
+                    totalAmount += laptopPriceList[phoneBrand] * quantity;
+                }
+
+                if (totalAmount > 0) {
+                    alert("Total Amount: $" + totalAmount);
+                } else {
+                    alert("Please select at least one item and enter quantity.");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="big-container">
+        <div class="container1">
+            <form style="display: flex; flex-direction: column;">
+                <label for="phones">Choose a phone brand</label>
+                <select name="phones" id="phones">
+                    <option value="HP">HP</option>
+                    <option value="Nokia">Nokia</option>
+                    <option value="Samsung">Samsung</option>
+                    <option value="Motorola">Motorola</option>
+                    <option value="Apple">Apple</option>
+                </select>
+                <br>
+                <label><input type="checkbox" name="mobile" id="mobile"> Mobile</label>
+                <label><input type="checkbox" name="laptop" id="laptop"> Laptop</label>
+                <br>
+                <label for="quantity">Enter quantity:</label>
+                <input type="text" id="quantity" placeholder="Enter quantity" />
+                <br>
+                <button type="submit" id="btnSubmit">Produce Bill</button>
+            </form>
+        </div>
+    
+    </div>
+
+</body>
+</html>

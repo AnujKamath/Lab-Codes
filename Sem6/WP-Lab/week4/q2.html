@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Input Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .calculator {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input {
+            width: 200px;
+            height: 40px;
+            font-size: 20px;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            width: 50px;
+            height: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background: orange;
+            color: white;
+            border-radius: 5px;
+        }
+        button.equal {
+            background: green;
+        }
+        button.AC{
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" placeholder="0" >
+        <div class="buttons">
+            <button class="operator" data-op="+">+</button>
+            <button class="operator" data-op="-">-</button>
+            <button class="AC">AC</button>
+        </div>
+        <div class="buttons">
+            <button class="operator" data-op="*">x</button>
+            <button class="operator" data-op="/">/</button>
+            <button class="equal">=</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let expression = "";
+
+        $(document).ready(function() {
+            $('#display').focus();
+
+            $('.operator').click(function() {
+                let operator = $(this).data('op');
+                setOperation(operator);
+            });
+
+            $('.AC').click(function() {
+                AC();
+            });
+
+            $('.equal').click(function() {
+                calculate();
+            });
+        });
+
+        function AC() {
+            expression = "";
+            $('#display').val("");
+            $('#display').attr("placeholder", "0");
+            $('#display').focus();
+        }
+
+        function setOperation(operator) {
+            let displayVal = $('#display').val();
+            if (displayVal === "") return;
+            if (expression !== "") calculate();
+            expression = displayVal + " " + operator + " ";
+            $('#display').val("");
+            $('#display').attr("placeholder", displayVal + " " + operator);
+            $('#display').focus();
+        }
+
+        function calculate() {
+            try {
+                expression += $('#display').val();
+                let result = eval(expression);
+                $('#display').val(result);
+                expression = result.toString();
+            } catch {
+                $('#display').val("Error");
+                expression = "";
+            }
+            $('#display').focus();
+        }
+    </script>
+
+</body>
+</html>
