@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details Form</title>
+</head>
+<body>
+
+<h1>Enter Employee Details</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">“Am I Eligible for Promotion:</button>
+</form>
+
+<!-- {% if employee_info %}
+    <label for="result"><h1>{{ result }}</h1></label>
+{% endif %} -->
+{% if result %}
+    <h2>Eligibility Result:</h2>
+    <p>Employee ID: {{ employee_info.employee_id }}</p>
+    <p>Date of Joining: {{ employee_info.doj }}</p>
+    <p>Eligibility for Promotion: {{ result }}</p>
+{% endif %}
+
+</body>
+</html>
