@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .captcha-box {
+            display: inline-block;
+            padding: 10px;
+            background: #f2f2f2;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            user-select: none;
+        }
+        .disabled {
+            background: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

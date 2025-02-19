@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Captcha Verification</h2>
+
+    <div id="captcha">{{ captcha }}</div>
+    <input type="text" id="userInput" placeholder="Enter Captcha">
+    <button onclick="validateCaptcha()">Submit</button>
+    <p id="message"></p>
+
+    <script>
+        function validateCaptcha() {
+            fetch("{% url 'validate_captcha' %}", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": "{{ csrf_token }}" },
+                body: "captcha_input=" + encodeURIComponent(document.getElementById("userInput").value)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("message").innerText = data.message;
+                if (data.status === 'disabled') document.getElementById("userInput").disabled = true;
+            });
+        }
+    </script>
+{% endblock %}
