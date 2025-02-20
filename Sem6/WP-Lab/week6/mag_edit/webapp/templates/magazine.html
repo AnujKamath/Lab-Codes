@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magazine Cover Result</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        .magazine-cover {
+            background-size: cover;
+            background-position: center;
+            height: 600px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .cover-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: {{ font_color }};
+            font-size: {{ font_size }}px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="text-center mb-4" style="font-family: 'Arial', sans-serif; color: #333;">Your Magazine Cover</h2>
+        
+        <!-- Container for the Magazine Cover -->
+        <div class="magazine-cover" style="background-image: url('{{ bg_image }}'); background-color: {{ bg_color }};">
+            <!-- Magazine Title -->
+            <div class="cover-title">
+                <h1 class="display-4">{{ heading }}</h1>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p class="lead text-muted">This is a preview of your customized magazine cover. Feel free to make more edits.</p>
+            <a href="{% url 'magazine_editor' %}" class="btn btn-primary">Edit Again</a>
+        </div>
+    </div>
+
+    <!-- Optional Bootstrap JavaScript and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
