@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote for Book Review</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">How is the book "ASP.NET with C# by Vipul Prakashan?"</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group" style="display: flex;">
+                <div>
+                    <div>
+                        <label>
+                            <input type="radio" name="choice" value="Good" {% if form.choice.value == 'Good' %}checked{% endif %}>
+                            Good
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            <input type="radio" name="choice" value="Satisfactory" {% if form.choice.value == 'Satisfactory' %}checked{% endif %}>
+                            Satisfactory
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            <input type="radio" name="choice" value="Bad" {% if form.choice.value == 'Bad' %}checked{% endif %}>
+                            Bad
+                        </label>
+                    </div>
+                </div>
+                <div style="padding-left:20px">
+                    {% if percentages %}
+                    <div>{{ percentages.Good }}%</div>
+                    {% endif %}
+                    {% if percentages %}
+                    <div>{{ percentages.Satisfactory }}%</div>
+                    {% endif %}
+                    {% if percentages %}
+                    <div>{{ percentages.Bad }}%</div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Vote</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="text-center mb-4">Enter your details</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" id="id_name" value="{{ form.name.value }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="id_total_marks" class="form-label">Total Marks</label>
+            <input type="number" name="total_marks" class="form-control" id="id_total_marks" value="{{ form.total_marks.value }}">
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100">Calculate</button>
+    </form>
+{% endblock %}
