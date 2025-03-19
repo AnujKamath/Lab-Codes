@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phone Dealer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Phone Dealer</h2>
+            </div>
+            <div class="card-body">
+                
+                {% if order %}
+                    <h4 class="text-success text-center">Bill Summary</h4>
+                    <table class="table table-bordered mt-3">
+                        <tr>
+                            <th>Brand</th>
+                            <td>{{ order.brand }}</td>
+                        </tr>
+                        <tr>
+                            <th>Items</th>
+                            <td>{{ order.items|join:", " }}</td>
+                        </tr>
+                        <tr>
+                            <th>Quantity</th>
+                            <td>{{ order.quantity }}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Price</th>
+                            <td class="fw-bold text-danger">₹{{ total_price }}</td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <a href="{% url 'order' %}?new_order=true" class="btn btn-outline-primary">Place New Order</a>
+                    </div>
+
+                {% else %}
+                    <h4 class="text-center text-primary">Place Your Order</h4>
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Produce Bill</button>
+                        </div>
+                    </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
