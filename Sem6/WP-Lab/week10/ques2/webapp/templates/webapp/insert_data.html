@@ -1,0 +1,13 @@
+<!-- webapp/templates/webapp/insert_data.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Insert Data into Works Table</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary">Insert Data</button>
+    </form>
+{% endblock %}

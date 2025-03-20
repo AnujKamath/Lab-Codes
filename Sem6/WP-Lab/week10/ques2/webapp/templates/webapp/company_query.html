@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Retrieve People Working for a Particular Company</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary">Query</button>
+    </form>
+
+    {% if people %}
+        <h3>People who work for {{ form.cleaned_data.company_name }}:</h3>
+        <ul>
+            {% for person in people %}
+                <li>{{ person.person_name }} - City: {{ person.city }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No people found for this company or no matching city found.</p>
+    {% endif %}
+{% endblock %}
