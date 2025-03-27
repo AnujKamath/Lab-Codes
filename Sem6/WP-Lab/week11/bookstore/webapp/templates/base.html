@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'manage_books' %}">Book System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="{% url 'manage_books' %}">Manage Books</a>
+                    <a class="nav-link" href="{% url 'add_book' %}">Add Book</a>
+                    <a class="nav-link" href="{% url 'add_author' %}">Add Author</a>
+                    <a class="nav-link" href="{% url 'add_publisher' %}">Add Publisher</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-4">
+        <div class="card shadow">
+            <div class="card-body">
+                {% if content == 'manage_books' %}
+                <div class="mb-4">
+                    <h2 class="mb-4">Manage Books</h2>
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-8">
+                            <input type="text" name="query" class="form-control" 
+                                   placeholder="Search by title or author" required>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </form>
+                </div>
+
+                {% if books %}
+                <div class="mt-4">
+                    <h3 class="mb-3">Search Results</h3>
+                    <div class="list-group">
+                        {% for book in books %}
+                        <div class="list-group-item">
+                            <h5 class="mb-2">{{ book.title }}</h5>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>Published: {{ book.publication_date }}</span>
+                                <span>Publisher: {{ book.publisher.name }}</span>
+                            </div>
+                            <div class="mt-2">
+                                <strong>Authors:</strong>
+                                {% for author in book.authors.all %}
+                                <span class="badge bg-secondary">
+                                    {{ author.first_name }} {{ author.last_name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% elif query %}
+                <div class="alert alert-warning mt-4">No results found for "{{ query }}"</div>
+                {% endif %}
+
+{% elif content == 'add_book' %}
+    <h2 class="mb-4">Add New Book</h2>
+    <form method="POST" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Publication Date</label>
+            <input type="date" name="publication_date" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Authors</label>
+            <select multiple class="form-select" name="authors" required>
+                {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.first_name }} {{ author.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Publisher</label>
+            <select class="form-select" name="publisher" required>
+                {% for publisher in publishers %}
+                <option value="{{ publisher.id }}">{{ publisher.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Save Book</button>
+        </div>
+    </form>
+
+                {% elif content == 'add_author' %}
+                <h2 class="mb-4">Add New Author</h2>
+                <form method="POST" class="row g-3">
+                    {% csrf_token %}
+                    <div class="col-md-4">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">Add Author</button>
+                    </div>
+                </form>
+
+                {% elif content == 'add_publisher' %}
+                <h2 class="mb-4">Add New Publisher</h2>
+                <form method="POST" class="row g-3">
+                    {% csrf_token %}
+                    <!-- Form fields remain same but styled -->
+                    <div class="col-md-6">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Website</label>
+                        <input type="url" name="website" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Street Address</label>
+                        <input type="text" name="street_address" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">State/Province</label>
+                        <input type="text" name="state_province" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Country</label>
+                        <input type="text" name="country" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">Add Publisher</button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-4 text-center text-muted small">
+        <p>&copy; 2023 Book Management System</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

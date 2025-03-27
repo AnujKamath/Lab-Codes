@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="mb-3">Product List</h1>
+    <ul class="list-group">
+        {% for product in products %}
+        <li class="list-group-item">
+            <span>{{ product.title }} ({{ product.price }})</span>
+            <br>
+            {{ product.description }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'create_product' %}" class="btn btn-secondary mt-3">Create a new product</a></p>
+{% endblock %}

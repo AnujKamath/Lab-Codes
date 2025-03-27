@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Manage Books</h2>
+
+<form method="GET" action="{% url 'search_books' %}">
+    <input type="text" name="query" placeholder="Search by title or author" required>
+    <button type="submit">Search</button>
+</form>
+
+{% if books %}
+    <h3>Search Results:</h3>
+    <ul>
+        {% for book in books %}
+            <li><strong>{{ book.title }}</strong> (Published: {{ book.publication_date }})</li>
+            <p>Authors: 
+                {% for author in book.authors.all %}
+                    {{ author.first_name }} {{ author.last_name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p>Publisher: {{ book.publisher.name }}</p>
+        {% endfor %}
+    </ul>
+{% elif query %}
+    <p>No results found for "{{ query }}".</p>
+{% endif %}
+{% endblock %}
